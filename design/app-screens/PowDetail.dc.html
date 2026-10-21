@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Vinden — Proof of Work</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#07142F}a:hover{color:#1565D8}
+</style>
+</helmet>
+<div style="width:390px;height:2560px;position:relative;overflow:hidden;box-sizing:border-box;background:#FDFBF6;font-family:'DM Sans',system-ui,sans-serif;color:#07142F;">
+
+<!-- Hero: the work itself -->
+<div style="position:relative;height:320px;overflow:hidden;background:#0E1F45;">
+<div style="position:absolute;left:84px;top:80px;width:250px;height:180px;border-radius:12px;background:rgba(255,255,255,0.14);" aria-hidden="true"></div>
+<div style="position:absolute;left:70px;top:94px;width:250px;height:180px;box-sizing:border-box;border-radius:12px;background:#FFFFFF;padding:16px;display:flex;flex-direction:column;box-shadow:0 12px 30px rgba(0,0,0,0.25);" role="img" aria-label="Report cover: Why CAC doubled on campus">
+<div style="font-size:9px;line-height:12px;font-weight:700;letter-spacing:0.08em;color:#5C6680;">SNACKLY × VINDEN CLUB MERIDIAN</div>
+<div style="margin-top:6px;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-weight:800;font-size:17px;line-height:21px;letter-spacing:-0.02em;color:#07142F;">Why CAC doubled on campus</div>
+<div style="margin-top:14px;height:64px;display:flex;align-items:flex-end;gap:6px;border-bottom:1px solid #E4DFD3;">
+<span style="flex:1;height:16px;border-radius:3px 3px 0 0;background:#FBC793;"></span>
+<span style="flex:1;height:20px;border-radius:3px 3px 0 0;background:#FBC793;"></span>
+<span style="flex:1;height:26px;border-radius:3px 3px 0 0;background:#FBC793;"></span>
+<span style="flex:1;height:31px;border-radius:3px 3px 0 0;background:#FBC793;"></span>
+<span style="flex:1;height:39px;border-radius:3px 3px 0 0;background:#FBC793;"></span>
+<span style="flex:1;height:50px;border-radius:3px 3px 0 0;background:#F9963A;"></span>
+<span style="flex:1;height:62px;border-radius:3px 3px 0 0;background:#F7841E;"></span>
+</div>
+<div style="margin-top:4px;display:flex;justify-content:space-between;font-size:9px;line-height:12px;color:#5C6680;"><span>Jan</span><span>Sep</span></div>
+</div>
+<a href="Main.dc.html" aria-label="Back" style="position:absolute;top:56px;left:16px;width:44px;height:44px;border-radius:999px;background:#FFFFFF;color:#07142F;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(7,20,47,0.18);">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:2;stroke-linecap:round;stroke-linejoin:round" aria-hidden="true"><path d="m15 6-6 6 6 6"></path></svg>
+</a>
+<div style="position:absolute;top:56px;right:16px;height:44px;padding:0 4px;box-sizing:border-box;border-radius:999px;background:#FFFFFF;display:flex;align-items:center;gap:2px;box-shadow:0 2px 8px rgba(7,20,47,0.18);">
+<button type="button" aria-label="Share" style="width:38px;height:38px;border-radius:999px;border:none;background:transparent;color:#07142F;display:flex;align-items:center;justify-content:center;padding:0;cursor:pointer;">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round" aria-hidden="true"><path d="M12 3.5v11"></path><path d="m8 7.5 4-4 4 4"></path><path d="M7 11H6v9.5h12V11h-1"></path></svg>
+</button>
+<button type="button" aria-label="Save" style="width:38px;height:38px;border-radius:999px;border:none;background:transparent;color:#07142F;display:flex;align-items:center;justify-content:center;padding:0;cursor:pointer;">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round" aria-hidden="true"><path d="M6.5 4h11v16.5l-5.5-3.8-5.5 3.8z"></path></svg>
+</button>
+</div>
+<div style="position:absolute;right:14px;bottom:14px;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,0.18);color:#FFFFFF;font-size:12px;line-height:16px;font-weight:600;">1 / 6 files</div>
+</div>
+
+<div style="display:flex;flex-direction:column;padding:20px 18px 0;">
+
+<!-- Provenance card -->
+<div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;background:#FFFFFF;border:1px solid #E4DFD3;">
+<div style="width:40px;height:40px;flex-shrink:0;border-radius:9px;background:#FFE89A;border:1px solid #2A3550;box-sizing:border-box;display:flex;align-items:center;justify-content:center;color:#07142F;">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round" aria-hidden="true"><rect x="5" y="3.5" width="14" height="17" rx="2"></rect><path d="M9 8h.01M15 8h.01M9 12h.01M15 12h.01"></path><path d="M10 20.5v-4h4v4"></path></svg>
+</div>
+<div style="min-width:0;">
+<div style="font-size:15px;line-height:20px;font-weight:700;color:#07142F;">Paid brief from Snackly</div>
+<div style="font-size:13px;line-height:18px;color:#3D4A63;">Solved by a team at Vinden Club Meridian</div>
+</div>
+</div>
+
+<!-- Title block -->
+<h1 style="margin:18px 0 0;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-weight:800;font-size:26px;line-height:32px;letter-spacing:-0.025em;color:#07142F;">Why CAC doubled for college users: a campus growth teardown</h1>
+<div style="margin-top:8px;font-size:14px;line-height:20px;color:#3D4A63;">Growth strategy · Market research</div>
+<div style="margin-top:2px;font-size:14px;line-height:20px;color:#5C6680;">Oct 2026 · 6 weeks · Team of 4</div>
+
+<div style="margin-top:12px;display:flex;align-items:center;gap:8px;font-size:16px;line-height:22px;">
+<span style="font-weight:700;">8.6</span>
+<span style="display:inline-flex;gap:3px;align-items:center;" role="img" aria-label="Vouch weight 8.6 out of 10">
+<span style="width:14px;height:14px;border-radius:999px;background:#1565D8;"></span>
+<span style="width:14px;height:14px;border-radius:999px;background:#1565D8;"></span>
+<span style="width:14px;height:14px;border-radius:999px;background:#1565D8;"></span>
+<span style="width:14px;height:14px;border-radius:999px;background:#1565D8;"></span>
+<span style="width:14px;height:14px;border-radius:999px;box-sizing:border-box;border:1.5px solid #1565D8;background:linear-gradient(90deg,#1565D8 50%,transparent 50%);"></span>
+</span>
+<span style="color:#3D4A63;">(14 vouches)</span>
+</div>
+<div style="margin-top:8px;display:flex;align-items:center;gap:8px;font-size:15px;line-height:22px;color:#07142F;">
+<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#1565D8"></circle><path d="m7.5 12.2 3 3 6-6.4" fill="none" stroke="#FFFFFF" style="stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round"></path></svg>
+<span>Verified by AI and club review</span>
+<button type="button" aria-label="How verification works" style="width:24px;height:24px;border:none;background:transparent;padding:0;color:#3D4A63;display:flex;align-items:center;justify-content:center;cursor:pointer;">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v5"></path><path d="M12 8h.01"></path></svg>
+</button>
+</div>
+
+<div style="margin-top:14px;display:flex;flex-wrap:wrap;gap:8px;">
+<span style="height:32px;padding:0 12px;border-radius:999px;border:1px solid #3D4A63;box-sizing:border-box;display:inline-flex;align-items:center;font-size:14px;font-weight:500;color:#07142F;">Funnel analysis</span>
+<span style="height:32px;padding:0 12px;border-radius:999px;border:1px solid #3D4A63;box-sizing:border-box;display:inline-flex;align-items:center;font-size:14px;font-weight:500;color:#07142F;">SQL</span>
+<span style="height:32px;padding:0 12px;border-radius:999px;border:1px solid #3D4A63;box-sizing:border-box;display:inline-flex;align-items:center;font-size:14px;font-weight:500;color:#07142F;">Survey design</span>
+<span style="height:32px;padding:0 12px;border-radius:999px;border:1px solid #3D4A63;box-sizing:border-box;display:inline-flex;align-items:center;font-size:14px;font-weight:500;color:#07142F;">Pitching</span>
+</div>
+
+<p style="margin:16px 0 0;font-size:15px;line-height:23px;color:#3D4A63;">Snackly's cost to acquire a college user rose from ₹180 to ₹380 in nine months. We surveyed 412 students and ran cohort analysis on 18 months of sign-ups. Two causes stood out…</p>
+<button type="button" style="margin-top:6px;align-self:flex-start;display:flex;align-items:center;gap:4px;border:none;background:transparent;padding:0;font-family:'DM Sans',system-ui,sans-serif;font-size:15px;line-height:22px;font-weight:700;color:#07142F;text-decoration:underline;text-underline-offset:3px;cursor:pointer;">Read more
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:2;stroke-linecap:round;stroke-linejoin:round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+</button>
+
+<div style="height:1px;background:#E4DFD3;margin:24px 0;"></div>
+
+<!-- How this was verified -->
+<section>
+<h2 style="margin:0;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-weight:800;font-size:20px;line-height:26px;letter-spacing:-0.02em;color:#07142F;">How this was verified</h2>
+<p style="margin:4px 0 0;font-size:14px;line-height:20px;color:#5C6680;">Each check adds trust. Recruiters see all three.</p>
+<div style="margin-top:14px;border-radius:16px;background:#FFFFFF;border:1px solid #E4DFD3;display:flex;flex-direction:column;">
+<div style="display:flex;align-items:center;gap:12px;padding:14px;">
+<div style="width:40px;height:40px;flex-shrink:0;border-radius:10px;background:#EAF2FD;color:#0F4FAE;display:flex;align-items:center;justify-content:center;">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round" aria-hidden="true"><path d="M12 3.5l1.9 5.1 5.1 1.9-5.1 1.9L12 17.5l-1.9-5.1L5 10.5l5.1-1.9z"></path><path d="M18.5 16v4M16.5 18h4"></path></svg>
+</div>
+<div style="flex:1;min-width:0;">
+<div style="font-size:15px;line-height:20px;font-weight:700;">AI check</div>
+<div style="margin-top:2px;font-size:13px;line-height:18px;color:#3D4A63;">Report, data and deck reviewed. No issues found.</div>
+</div>
+<svg width="20" height="20" viewBox="0 0 24 24" style="flex-shrink:0" role="img" aria-label="Passed"><circle cx="12" cy="12" r="10" fill="#1565D8"></circle><path d="m7.5 12.2 3 3 6-6.4" fill="none" stroke="#FFFFFF" style="stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round"></path></svg>
+</div>
+<div style="height:1px;background:#ECE7DC;margin:0 14px;"></div>
+<div style="display:flex;align-items:center;gap:12px;padding:14px;">
+<div style="width:40px;height:40px;flex-shrink:0;border-radius:10px;background:#EFEAFD;color:#5B43AE;display:flex;align-items:center;justify-content:center;">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round" aria-hidden="true"><path d="M12 3l7 2.8v5.4c0 4.4-2.9 8.1-7 9.8-4.1-1.7-7-5.4-7-9.8V5.8z"></path><path d="m9 12 2.2 2.2L15.5 10"></path></svg>
+</div>
+<div style="flex:1;min-width:0;">
+<div style="font-size:15px;line-height:20px;font-weight:700;">Club review</div>
+<div style="margin-top:2px;font-size:13px;line-height:18px;color:#3D4A63;">Approved by the Proof of Work &amp; Quality team on 12 Oct</div>
+</div>
+<svg width="20" height="20" viewBox="0 0 24 24" style="flex-shrink:0" role="img" aria-label="Passed"><circle cx="12" cy="12" r="10" fill="#1565D8"></circle><path d="m7.5 12.2 3 3 6-6.4" fill="none" stroke="#FFFFFF" style="stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round"></path></svg>
+</div>
+<div style="height:1px;background:#ECE7DC;margin:0 14px;"></div>
+<div style="display:flex;align-items:center;gap:12px;padding:14px;">
+<div style="width:40px;height:40px;flex-shrink:0;border-radius:10px;background:#FFF3CC;color:#07142F;display:flex;align-items:center;justify-content:center;">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round" aria-hidden="true"><rect x="5" y="3.5" width="14" height="17" rx="2"></rect><path d="M9 8h.01M15 8h.01M9 12h.01M15 12h.01"></path><path d="M10 20.5v-4h4v4"></path></svg>
+</div>
+<div style="flex:1;min-width:0;">
+<div style="font-size:15px;line-height:20px;font-weight:700;">Company sign-off</div>
+<div style="margin-top:2px;font-size:13px;line-height:18px;color:#3D4A63;">Snackly approved this work for public view</div>
+</div>
+<svg width="20" height="20" viewBox="0 0 24 24" style="flex-shrink:0" role="img" aria-label="Passed"><circle cx="12" cy="12" r="10" fill="#1565D8"></circle><path d="m7.5 12.2 3 3 6-6.4" fill="none" stroke="#FFFFFF" style="stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round"></path></svg>
+</div>
+</div>
+</section>
+
+<!-- Who did what -->
+<section style="margin-top:32px;">
+<div style="display:flex;align-items:center;justify-content:space-between;">
+<h2 style="margin:0;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-weight:800;font-size:20px;line-height:26px;letter-spacing:-0.02em;color:#07142F;">Who did what</h2>
+<span style="display:inline-flex;align-items:center;gap:5px;height:26px;padding:0 10px;border-radius:999px;background:#EAF2FD;color:#0F4FAE;font-size:12px;font-weight:700;">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"></path></svg>
+Confirmed by all 4</span>
+</div>
+<div style="margin-top:14px;height:10px;display:flex;gap:2px;border-radius:999px;overflow:hidden;" role="img" aria-label="Contribution split: Ananya 40%, Kabir 25%, Meera 20%, Rohan 15%">
+<span style="width:40%;background:#1565D8;"></span>
+<span style="width:25%;background:#F9963A;"></span>
+<span style="width:20%;background:#B7A4F2;"></span>
+<span style="width:15%;background:#FFD23F;"></span>
+</div>
+<div style="margin-top:8px;display:flex;flex-direction:column;">
+<a href="Profile.dc.html" style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #ECE7DC;text-decoration:none;color:#07142F;">
+<span style="width:40px;height:40px;flex-shrink:0;border-radius:999px;background:#DCE8FB;color:#0F4FAE;display:flex;align-items:center;justify-content:center;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:14px;font-weight:800;">AR</span>
+<span style="flex:1;min-width:0;display:flex;flex-direction:column;">
+<span style="font-size:15px;line-height:20px;font-weight:700;">Ananya Rao</span>
+<span style="font-size:13px;line-height:18px;color:#3D4A63;">Lead · Survey design, final analysis</span>
+</span>
+<span style="display:flex;align-items:center;gap:6px;font-size:15px;font-weight:700;"><span style="width:10px;height:10px;border-radius:999px;background:#1565D8;"></span>40%</span>
+</a>
+<div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #ECE7DC;">
+<span style="width:40px;height:40px;flex-shrink:0;border-radius:999px;background:#FDE3C8;color:#A84B06;display:flex;align-items:center;justify-content:center;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:14px;font-weight:800;">KS</span>
+<span style="flex:1;min-width:0;display:flex;flex-direction:column;">
+<span style="font-size:15px;line-height:20px;font-weight:700;">Kabir Shah</span>
+<span style="font-size:13px;line-height:18px;color:#3D4A63;">SQL and cohort analysis</span>
+</span>
+<span style="display:flex;align-items:center;gap:6px;font-size:15px;font-weight:700;"><span style="width:10px;height:10px;border-radius:999px;background:#F9963A;"></span>25%</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #ECE7DC;">
+<span style="width:40px;height:40px;flex-shrink:0;border-radius:999px;background:#EFEAFD;color:#5B43AE;display:flex;align-items:center;justify-content:center;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:14px;font-weight:800;">MI</span>
+<span style="flex:1;min-width:0;display:flex;flex-direction:column;">
+<span style="font-size:15px;line-height:20px;font-weight:700;">Meera Iyer</span>
+<span style="font-size:13px;line-height:18px;color:#3D4A63;">32 student interviews</span>
+</span>
+<span style="display:flex;align-items:center;gap:6px;font-size:15px;font-weight:700;"><span style="width:10px;height:10px;border-radius:999px;background:#B7A4F2;"></span>20%</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px;padding:12px 0;">
+<span style="width:40px;height:40px;flex-shrink:0;border-radius:999px;background:#FFF3CC;color:#7A5B00;display:flex;align-items:center;justify-content:center;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:14px;font-weight:800;">RD</span>
+<span style="flex:1;min-width:0;display:flex;flex-direction:column;">
+<span style="font-size:15px;line-height:20px;font-weight:700;">Rohan Das</span>
+<span style="font-size:13px;line-height:18px;color:#3D4A63;">Deck and recommendations</span>
+</span>
+<span style="display:flex;align-items:center;gap:6px;font-size:15px;font-weight:700;"><span style="width:10px;height:10px;border-radius:999px;background:#FFD23F;"></span>15%</span>
+</div>
+</div>
+</section>
+
+<!-- Vouches -->
+<section style="margin-top:32px;">
+<div style="display:flex;align-items:baseline;justify-content:space-between;">
+<h2 style="margin:0;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-weight:800;font-size:20px;line-height:26px;letter-spacing:-0.02em;color:#07142F;">Vouches (14)</h2>
+<a href="#" style="font-size:15px;font-weight:600;color:#07142F;text-decoration:underline;text-underline-offset:3px;">See all</a>
+</div>
+<p style="margin:4px 0 0;font-size:14px;line-height:20px;color:#5C6680;">Weighted by each voucher's experience</p>
+<div style="margin-top:14px;display:flex;gap:8px;overflow:hidden;">
+<button type="button" style="flex-shrink:0;display:flex;align-items:center;gap:6px;height:36px;padding:0 14px;border-radius:999px;border:1px solid #07142F;background:#EEF1F6;color:#07142F;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;font-weight:600;cursor:pointer;">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"></path><circle cx="15" cy="7" r="2"></circle><circle cx="9" cy="17" r="2"></circle></svg>
+Highest weight
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:2;stroke-linecap:round;stroke-linejoin:round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+</button>
+<button type="button" style="flex-shrink:0;height:36px;padding:0 14px;border-radius:999px;border:1px solid #3D4A63;background:#FFFFFF;color:#07142F;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;font-weight:600;cursor:pointer;">Professionals</button>
+<button type="button" style="flex-shrink:0;height:36px;padding:0 14px;border-radius:999px;border:1px solid #3D4A63;background:#FFFFFF;color:#07142F;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;font-weight:600;cursor:pointer;">Peers</button>
+</div>
+
+<article style="margin-top:14px;padding:16px;border-radius:16px;background:#FFFFFF;border:1px solid #E4DFD3;display:flex;flex-direction:column;">
+<div style="display:flex;align-items:center;gap:12px;">
+<span style="width:44px;height:44px;flex-shrink:0;border-radius:999px;background:#FDE3C8;color:#A84B06;display:flex;align-items:center;justify-content:center;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:15px;font-weight:800;">PN</span>
+<div style="flex:1;min-width:0;">
+<div style="font-size:15px;line-height:20px;font-weight:700;">Priya Nair</div>
+<div style="font-size:13px;line-height:18px;color:#3D4A63;">Growth Lead, Northwind Labs · 9 yrs</div>
+</div>
+<button type="button" aria-label="More options" style="width:36px;height:36px;border:none;background:transparent;padding:0;color:#07142F;display:flex;align-items:center;justify-content:center;cursor:pointer;">
+<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="1.8" fill="currentColor"></circle><circle cx="12" cy="12" r="1.8" fill="currentColor"></circle><circle cx="12" cy="19" r="1.8" fill="currentColor"></circle></svg>
+</button>
+</div>
+<div style="margin-top:12px;display:flex;align-items:center;justify-content:space-between;">
+<span style="display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:999px;background:#EAF2FD;color:#0F4FAE;font-size:13px;font-weight:700;">Vouch weight 9.4</span>
+<span style="font-size:13px;line-height:18px;color:#5C6680;">2 days ago</span>
+</div>
+<div style="margin-top:10px;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-weight:700;font-size:16px;line-height:22px;letter-spacing:-0.01em;">Decision-ready, not just descriptive</div>
+<p style="margin:6px 0 0;font-size:15px;line-height:22px;color:#3D4A63;">The referral-fraud finding alone would have saved us a quarter. Clean SQL, honest about its limits, and recommendations a growth team could ship next sprint.</p>
+<div style="margin-top:10px;font-size:13px;line-height:18px;color:#5C6680;">Vouched for: Funnel analysis · SQL</div>
+<button type="button" style="margin-top:12px;align-self:flex-start;display:flex;align-items:center;gap:6px;height:36px;padding:0 14px;border-radius:999px;border:1px solid #3D4A63;background:#FFFFFF;color:#07142F;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;font-weight:600;cursor:pointer;">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round" aria-hidden="true"><path d="M7 10v10H4V10z"></path><path d="M7 10l3.6-6.3A1.9 1.9 0 0 1 14 5l-.8 4H19a2 2 0 0 1 2 2.4l-1.4 6.8A2 2 0 0 1 17.6 20H7"></path></svg>
+Helpful 6</button>
+</article>
+
+<article style="margin-top:12px;padding:16px;border-radius:16px;background:#FFFFFF;border:1px solid #E4DFD3;display:flex;flex-direction:column;">
+<div style="display:flex;align-items:center;gap:12px;">
+<span style="width:44px;height:44px;flex-shrink:0;border-radius:999px;background:#EFEAFD;color:#5B43AE;display:flex;align-items:center;justify-content:center;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:15px;font-weight:800;">RM</span>
+<div style="flex:1;min-width:0;">
+<div style="font-size:15px;line-height:20px;font-weight:700;">Rahul Menon</div>
+<div style="font-size:13px;line-height:18px;color:#3D4A63;">Final year, Meridian College · Peer</div>
+</div>
+<button type="button" aria-label="More options" style="width:36px;height:36px;border:none;background:transparent;padding:0;color:#07142F;display:flex;align-items:center;justify-content:center;cursor:pointer;">
+<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="1.8" fill="currentColor"></circle><circle cx="12" cy="12" r="1.8" fill="currentColor"></circle><circle cx="12" cy="19" r="1.8" fill="currentColor"></circle></svg>
+</button>
+</div>
+<div style="margin-top:12px;display:flex;align-items:center;justify-content:space-between;">
+<span style="display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:999px;background:#F5F1E8;color:#3D4A63;font-size:13px;font-weight:700;">Vouch weight 3.4</span>
+<span style="font-size:13px;line-height:18px;color:#5C6680;">5 days ago</span>
+</div>
+<div style="margin-top:10px;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-weight:700;font-size:16px;line-height:22px;letter-spacing:-0.01em;">Rigorous from day one</div>
+<p style="margin:6px 0 0;font-size:15px;line-height:22px;color:#3D4A63;">I sat in on two of the interview sessions. The team's research process was careful and well documented.</p>
+<div style="margin-top:10px;font-size:13px;line-height:18px;color:#5C6680;">Vouched for: Survey design</div>
+<button type="button" style="margin-top:12px;align-self:flex-start;display:flex;align-items:center;gap:6px;height:36px;padding:0 14px;border-radius:999px;border:1px solid #3D4A63;background:#FFFFFF;color:#07142F;font-family:'DM Sans',system-ui,sans-serif;font-size:14px;font-weight:600;cursor:pointer;">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round" aria-hidden="true"><path d="M7 10v10H4V10z"></path><path d="M7 10l3.6-6.3A1.9 1.9 0 0 1 14 5l-.8 4H19a2 2 0 0 1 2 2.4l-1.4 6.8A2 2 0 0 1 17.6 20H7"></path></svg>
+Helpful 2</button>
+</article>
+</section>
+
+</div>
+
+<!-- Sticky action bar + tab bar -->
+<div style="position:absolute;left:0;right:0;bottom:0;background:#FFFFFF;border-top:1px solid #E4DFD3;box-shadow:0 -6px 20px rgba(7,20,47,0.06);display:flex;flex-direction:column;">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 18px;">
+<div style="display:flex;flex-direction:column;">
+<span style="font-size:13px;line-height:18px;color:#5C6680;">Your vouch weight</span>
+<span style="font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-weight:800;font-size:20px;line-height:26px;letter-spacing:-0.02em;color:#07142F;">3.1 <span style="font-family:'DM Sans',system-ui,sans-serif;font-weight:500;font-size:14px;color:#3D4A63;">· Peer</span></span>
+</div>
+<button type="button" style="height:50px;padding:0 24px;border-radius:999px;border:none;background:#F9963A;color:#07142F;font-family:'DM Sans',system-ui,sans-serif;font-size:16px;font-weight:700;cursor:pointer;">Vouch for this work</button>
+</div>
+<div style="padding:2px 16px 20px;">
+<nav aria-label="Main" style="height:66px;box-sizing:border-box;border-radius:999px;background:#FFFFFF;border:1px solid #E4DFD3;box-shadow:0 10px 30px rgba(7,20,47,0.14);display:flex;align-items:center;padding:0 6px;">
+<a href="Main.dc.html" aria-current="page" style="flex:1;height:54px;border-radius:999px;background:#EEF1F6;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-decoration:none;color:#07142F;font-size:11px;line-height:14px;font-weight:700;">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="m15.5 8.5-2 5-5 2 2-5z"></path></svg>Explore</a>
+<button type="button" style="flex:1;height:54px;border:none;background:transparent;border-radius:999px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#3D4A63;font-family:'DM Sans',system-ui,sans-serif;font-size:11px;line-height:14px;font-weight:500;padding:0;cursor:pointer;">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round" aria-hidden="true"><circle cx="9" cy="8.5" r="3.5"></circle><path d="M2.5 20a6.5 6.5 0 0 1 13 0"></path><path d="M16 5a3.5 3.5 0 0 1 0 7"></path><path d="M18 14.5a6 6 0 0 1 3.5 5.5"></path></svg>Club</button>
+<button type="button" style="flex:1;height:54px;border:none;background:transparent;border-radius:999px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#3D4A63;font-family:'DM Sans',system-ui,sans-serif;font-size:11px;line-height:14px;font-weight:500;padding:0;cursor:pointer;">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="5"></rect><path d="M12 8.5v7M8.5 12h7"></path></svg>Post</button>
+<button type="button" style="flex:1;height:54px;border:none;background:transparent;border-radius:999px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#3D4A63;font-family:'DM Sans',system-ui,sans-serif;font-size:11px;line-height:14px;font-weight:500;padding:0;cursor:pointer;">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2.5"></rect><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7"></path><path d="M3 12.5h18"></path></svg>Openings</button>
+<button type="button" style="flex:1;height:54px;border:none;background:transparent;border-radius:999px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#3D4A63;font-family:'DM Sans',system-ui,sans-serif;font-size:11px;line-height:14px;font-weight:500;padding:0;cursor:pointer;">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4.5 20.5a7.5 7.5 0 0 1 15 0"></path></svg>Profile</button>
+</nav>
+</div>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":2560}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>
