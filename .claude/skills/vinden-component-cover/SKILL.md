@@ -21,6 +21,7 @@ File Vinden-Design (`zFjDhV7CDaLDVZpqN3dBzU`).
 ## Rules
 
 - The cover shows the work itself: a chart, screens, a slide. In the product it is generated from the upload.
+- Always Light: a cover is a picture of the work, so it keeps its colours in the dark theme. In Figma the Cover component and the media layer of Work and Brief cards are pinned to the Light mode; in code, Cover.tsx uses fixed colours.
 - Tone hints at the kind of work (Navy for reports, Blue for data, Lavender for design, Gold for briefs, Orange for decks). It says nothing about quality.
 
 ## In code

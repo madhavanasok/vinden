@@ -1,10 +1,10 @@
 import type { Person, Tone } from '../api';
 
 const TONES: Record<Tone, { bg: string; fg: string }> = {
-  blue: { bg: '#DCE8FB', fg: '#0F4FAE' },
-  orange: { bg: '#FDE3C8', fg: '#A84B06' },
-  lav: { bg: '#EFEAFD', fg: '#5B43AE' },
-  gold: { bg: '#FFF3CC', fg: '#7A5B00' },
+  blue: { bg: 'var(--color-bg-trust-strong)', fg: 'var(--color-text-trust)' },
+  orange: { bg: 'var(--color-bg-warm)', fg: 'var(--color-text-warm)' },
+  lav: { bg: 'var(--color-bg-club)', fg: 'var(--color-text-club)' },
+  gold: { bg: 'var(--color-bg-highlight)', fg: 'var(--color-text-highlight)' },
 };
 
 export const toneColors = (tone: Tone) => TONES[tone];

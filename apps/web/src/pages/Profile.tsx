@@ -40,7 +40,7 @@ export function ProfilePage() {
                 <div className="name-row">
                   <h1 id="profile-name" className="profile-name display">{p.name}</h1>
                   <svg width="22" height="22" viewBox="0 0 24 24" role="img" aria-label="Identity verified" className="icon">
-                    <circle cx="12" cy="12" r="10" fill="#1565D8" />
+                    <circle cx="12" cy="12" r="10" style={{ fill: 'var(--color-trust-score)' }} />
                     <path d="m7.5 12.2 3 3 6-6.4" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </div>

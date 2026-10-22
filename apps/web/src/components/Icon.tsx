@@ -33,6 +33,8 @@ const PATHS = {
   check: <path d="m5 12.5 4.5 4.5L19 7.5" />,
   upload: <><path d="M12 15V4.5" /><path d="M7.5 9 12 4.5 16.5 9" /><path d="M5 14.5v4A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5v-4" /></>,
   close: <path d="M6.5 6.5l11 11M17.5 6.5l-11 11" />,
+  sun: <><circle cx="12" cy="12" r="4" /><path d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4" /></>,
+  moon: <path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" />,
   moreH: <><circle cx="5" cy="12" r="1.4" fill="currentColor" /><circle cx="12" cy="12" r="1.4" fill="currentColor" /><circle cx="19" cy="12" r="1.4" fill="currentColor" /></>,
   moreV: <><circle cx="12" cy="5" r="1.4" fill="currentColor" /><circle cx="12" cy="12" r="1.4" fill="currentColor" /><circle cx="12" cy="19" r="1.4" fill="currentColor" /></>,
 } satisfies Record<string, ReactNode>;
@@ -63,7 +65,7 @@ export function CheckBadge({ size = 16, label }: { size?: number; label?: string
   const a11y = label ? { role: 'img', 'aria-label': label } : { 'aria-hidden': true };
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" className="icon" {...a11y}>
-      <circle cx="12" cy="12" r="10" fill="#1565D8" />
+      <circle cx="12" cy="12" r="10" style={{ fill: 'var(--color-trust-score)' }} />
       <path d="m7.5 12.2 3 3 6-6.4" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );

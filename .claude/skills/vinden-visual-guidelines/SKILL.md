@@ -51,6 +51,26 @@ Navy and cream carry every screen. Each other colour has one meaning:
 - **Text contrast:** only navy and the 700 steps are text colours on light backgrounds; all of them pass WCAG AA. Orange, gold and lavender at brand strength are fills, never text on cream. On navy, everything passes except Horizon Blue.
 - **Gradients** appear only in the logo, the profile ring and one editorial banner.
 
+## Dark theme
+
+Every Color token has a Light and a Dark value: two modes in the Figma Color collection, and two blocks of `--color-*` values in `styles.css`. Design and build with tokens only, and both themes follow automatically.
+
+- **What changes in Dark:**
+  - Night Navy (navy/900) is the page; cards rise one step to navy/800; muted panels sit at navy/850.
+  - Text is Morning Cream, navy/200 and navy/300. The primary action turns cream with navy text.
+  - Each tint becomes a deep version of its hue (blue/900, lavender/900, gold/900, orange/900, green/900, red/900), with the 200/300 step for its text.
+  - Orange stays the one key action; trust blue and focus move to blue/400.
+- **What stays the same:**
+  - Covers, because they are pictures of the work. Pinned to Light in Figma; fixed colours in `Cover.tsx`.
+  - The logo, the sunrise gradients, the editorial band (which gets a 1 px edge in dark) and white controls that float over covers.
+- **Contrast:** all dark text pairs pass AA. The lowest is error text on its tint at 6.1:1. Input borders and the focus ring are 4.5:1.
+- **Choosing the theme:**
+  - The theme switch (Moon or Sun icon button) is in the Top nav and the Home-type Mobile top bar.
+  - It sets `data-theme` on `<html>` and saves the choice as `vinden.theme`. Without a saved choice, `prefers-color-scheme` decides.
+  - `index.html` applies a saved choice before first paint and sets the browser toolbar colour.
+- **In Figma:** show a dark frame by setting the Color collection's mode on it (Appearance in the right panel). Screens / Dark has the dark versions; Color > Dark theme has the previews and the dark token grid.
+- **Never** hard-code colours or make separate "dark" tokens. If something looks wrong in Dark, it is bound to a primitive or a hex value; rebind it to a token.
+
 ## Typography
 
 Always apply a text style. Never set size or weight by hand.

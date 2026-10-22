@@ -5,7 +5,7 @@ description: The Vinden Icon atom: usage rules, Figma variants and properties, t
 
 # Icon (atom)
 
-The 34 line icons on a 24 px grid: 1.8 px stroke, round caps and joins.
+The 36 line icons on a 24 px grid: 1.8 px stroke, round caps and joins.
 
 **Use it for:** Pairing with a label in buttons, rows, meta lines and navigation.
 
@@ -14,7 +14,7 @@ The 34 line icons on a 24 px grid: 1.8 px stroke, round caps and joins.
 ## In Figma
 
 File Vinden-Design (`zFjDhV7CDaLDVZpqN3dBzU`).
-- Page **Icons**, one component per icon named `Icon/<Name>`: Search, Bell, Compass, Bookmark, Plus, Plus square, Users, Briefcase, User, Chevron right/left/down, Arrow left, Share, Info, Trending up, Thumbs up, Trophy, Calendar, Clock, File, Graduation, Sparkle, Shield check, Building, Lock, Map pin, Link, Sliders, Check, More, Verified, Upload, Close.
+- Page **Icons**, one component per icon named `Icon/<Name>`: Search, Bell, Compass, Bookmark, Plus, Plus square, Users, Briefcase, User, Chevron right/left/down, Arrow left, Share, Info, Trending up, Thumbs up, Trophy, Calendar, Clock, File, Graduation, Sparkle, Shield check, Building, Lock, Map pin, Link, Sliders, Check, More, Verified, Upload, Close, Sun, Moon.
 - Strokes are bound to `color/icon/default`. Override to `icon/inverse` on navy and inside Primary buttons. **After an instance swap, set the colour again**, because a swap resets it.
 
 ## Rules

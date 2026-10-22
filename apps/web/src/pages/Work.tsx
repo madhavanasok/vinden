@@ -7,7 +7,7 @@ import { CheckBadge, Icon, type IconName } from '../components/Icon';
 import { CheckRow, type CheckStatus } from '../components/Rows';
 import { ErrorState, Loading, NotFound } from './Placeholder';
 
-const SPLIT_COLORS = ['#1565D8', '#F9963A', '#B7A4F2', '#FFD23F'];
+const SPLIT_COLORS = ['var(--color-split-1)', 'var(--color-split-2)', 'var(--color-split-3)', 'var(--color-split-4)'];
 const weeks = (n: number) => `${n} week${n === 1 ? '' : 's'}`;
 
 export function WorkPage() {

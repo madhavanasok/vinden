@@ -21,7 +21,7 @@ File Vinden-Design (`zFjDhV7CDaLDVZpqN3dBzU`).
 
 ## Rules
 
-- Contents, in order: logo, search (hidden on Home), Explore, Club, Openings and Saved, the Post work Primary button, notifications, and your avatar.
+- Contents, in order: logo, search (hidden on Home), Explore, Club, Openings and Saved, the Post work Primary button, the theme switch (Moon in light, Sun in dark), notifications, and your avatar.
 - Content sits in the 1,200 px container. In Figma, set the current page's nested Nav link to Active.
 - Sticky at the top; the category row follows on Home.
 
@@ -29,7 +29,7 @@ File Vinden-Design (`zFjDhV7CDaLDVZpqN3dBzU`).
 
 Paths are under `apps/web/src`.
 
-- `Header` in components/Layout.tsx (`.site-header`, `.header-row`, `.main-nav`, `.header-actions`, `.cat-nav`).
+- `Header` in components/Layout.tsx (`.site-header`, `.header-row`, `.main-nav`, `.header-actions`, `.cat-nav`). `ThemeSwitch` (same file) flips `data-theme` on `<html>` and saves the choice; without one the system setting decides.
 
 ## Accessibility
 

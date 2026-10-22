@@ -1,4 +1,4 @@
-import { useState, type FormEvent, type ReactNode } from 'react';
+import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
 import { Link, NavLink, Outlet, useLocation, useNavigate, useSearchParams } from 'react-router';
 import { useMe } from '../api';
 import { Avatar, Logo } from './Bits';
@@ -45,6 +45,50 @@ export function Brand({ size = 38 }: { size?: number }) {
   );
 }
 
+type Theme = 'light' | 'dark';
+const THEME_KEY = 'vinden.theme';
+const THEME_COLOR: Record<Theme, string> = { light: '#FDFBF6', dark: '#07142F' };
+const systemDark = () => window.matchMedia('(prefers-color-scheme: dark)');
+const currentTheme = (): Theme => (document.documentElement.dataset.theme as Theme | undefined) ?? (systemDark().matches ? 'dark' : 'light');
+
+/** A saved choice wins; without one the system setting decides, and can change while the page is open. */
+function useTheme() {
+  const [theme, setTheme] = useState(currentTheme);
+  useEffect(() => {
+    const sync = () => setTheme(currentTheme());
+    const query = systemDark();
+    query.addEventListener('change', sync);
+    window.addEventListener('vinden-theme', sync);
+    return () => {
+      query.removeEventListener('change', sync);
+      window.removeEventListener('vinden-theme', sync);
+    };
+  }, []);
+  const toggle = () => {
+    const next: Theme = theme === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = next;
+    document.querySelectorAll('meta[name="theme-color"]').forEach((m) => m.setAttribute('content', THEME_COLOR[next]));
+    try {
+      localStorage.setItem(THEME_KEY, next);
+    } catch {
+      // Storage blocked: the choice lasts until the page reloads.
+    }
+    window.dispatchEvent(new Event('vinden-theme'));
+  };
+  return { theme, toggle };
+}
+
+/** Moon in the light theme, Sun in the dark one. Figma: the Theme switch in Top nav and Mobile top bar. */
+function ThemeSwitch() {
+  const { theme, toggle } = useTheme();
+  const dark = theme === 'dark';
+  return (
+    <button type="button" className="icon-btn bare" aria-label={dark ? 'Switch to light theme' : 'Switch to dark theme'} onClick={toggle}>
+      <Icon name={dark ? 'sun' : 'moon'} size={22} />
+    </button>
+  );
+}
+
 function HeaderSearch() {
   const navigate = useNavigate();
   const [q, setQ] = useState('');
@@ -83,6 +127,7 @@ function Header({ showSearch }: { showSearch: boolean }) {
             <Icon name="plus" size={18} strokeWidth={2} />
             Post work
           </Link>
+          <ThemeSwitch />
           <button type="button" className="icon-btn" aria-label="Notifications, 2 new">
             <Icon name="bell" size={22} />
             <span className="notify-dot" />
@@ -117,6 +162,7 @@ export function MobileBar() {
     <div className="mobile-bar mobile-only">
       <Brand size={36} />
       <div className="header-actions">
+        <ThemeSwitch />
         <button type="button" className="icon-btn" aria-label="Notifications, 2 new">
           <Icon name="bell" size={22} />
           <span className="notify-dot" />

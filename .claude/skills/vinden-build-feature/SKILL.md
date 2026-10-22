@@ -42,7 +42,7 @@ Vinden ships as **one responsive web app**: desktop browser and mobile browser, 
    - API routes go in `apps/api/src/app.ts`, with queries in `queries.ts` and tables in `schema.ts`. Use `ADD COLUMN IF NOT EXISTS` for changes to existing tables.
    - CSS goes in `styles.css`, in the matching section: base rules (desktop), then phone overrides in `@media (max-width: 767px)`. New rules use the `--color-*` tokens.
    - **Figma limits:** you can't resize layers inside an instance. Bars that show data (the Contribution split) are detached on the screen; the Progress bar has Value variants. After swapping an icon in a Primary button, set the icon to `icon/inverse` again.
-8. **Verify.** Run `npm run dev` and open http://localhost:5180 at 1440 and 390 wide. Check keyboard focus and screen reader names, and run `npm run typecheck`.
+8. **Verify.** Run `npm run dev` and open http://localhost:5180 at 1440 and 390 wide, in both themes (use the theme switch). Check keyboard focus and screen reader names, and run `npm run typecheck`. Design in Figma in both modes too: Screens / Dark holds the dark copies.
 9. **Close the loop.** Set the Notion feature's status, and update any skill whose component changed.
 
 ## Branches

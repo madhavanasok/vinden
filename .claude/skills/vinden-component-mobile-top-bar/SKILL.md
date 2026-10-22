@@ -1,13 +1,13 @@
 ---
 name: vinden-component-mobile-top-bar
-description: The Vinden Mobile top bar component: usage rules, Figma variants and properties, tokens, the React component and accessibility. Use when a Vinden screen needs a mobile top bar in Figma or code, for example: **Home** type on top-level tabs (logo, notifications, avatar). **Page** type on anything opened from a tab (back, title, optional "Step 2 of 4").
+description: The Vinden Mobile top bar component: usage rules, Figma variants and properties, tokens, the React component and accessibility. Use when a Vinden screen needs a mobile top bar in Figma or code, for example: **Home** type on top-level tabs (logo, theme switch, notifications, avatar). **Page** type on anything opened from a tab (back, title, optional "Step 2 of 4").
 ---
 
 # Mobile top bar (component)
 
 The phone top bar, below 768 px.
 
-**Use it for:** **Home** type on top-level tabs (logo, notifications, avatar). **Page** type on anything opened from a tab (back, title, optional "Step 2 of 4").
+**Use it for:** **Home** type on top-level tabs (logo, theme switch, notifications, avatar). **Page** type on anything opened from a tab (back, title, optional "Step 2 of 4").
 
 **Not for:** Desktop.
 
