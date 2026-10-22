@@ -1,12 +1,14 @@
 import { useState } from 'react';
-import { Link, useParams } from 'react-router';
+import { Link, useLocation, useParams } from 'react-router';
 import { ApiError, timeAgo, useMe, useToggleSave, useVouch, useWork, type Me, type Work } from '../api';
 import { Avatar, Dots, Logo } from '../components/Bits';
 import { Cover } from '../components/Cover';
 import { CheckBadge, Icon, type IconName } from '../components/Icon';
+import { CheckRow, type CheckStatus } from '../components/Rows';
 import { ErrorState, Loading, NotFound } from './Placeholder';
 
 const SPLIT_COLORS = ['#1565D8', '#F9963A', '#B7A4F2', '#FFD23F'];
+const weeks = (n: number) => `${n} week${n === 1 ? '' : 's'}`;
 
 export function WorkPage() {
   const { slug = '' } = useParams();
@@ -23,13 +25,22 @@ export function WorkPage() {
 }
 
 function WorkView({ w, me }: { w: Work; me: Me }) {
+  const posted = (useLocation().state as { posted?: boolean } | null)?.posted;
   const lead = w.team[0];
   const verified = [w.checks.ai && 'AI', w.checks.club && 'club review'].filter(Boolean).join(' and ');
-  const meta = `${w.tags.join(' · ')} · ${w.month} · ${w.weeks} weeks · ${w.team.length > 1 ? `Team of ${w.team.length}` : 'Solo'}`;
+  const meta = `${w.tags.join(' · ')} · ${w.month} · ${weeks(w.weeks)} · ${w.team.length > 1 ? `Team of ${w.team.length}` : 'Solo'}`;
 
   return (
     <article className="work-page">
       <div className="container">
+        {w.status === 'in_review' && (
+          <p className="notice" role="status">
+            <Icon name="clock" size={18} />
+            {posted
+              ? 'Sent for verification. The AI check takes a few minutes, then your club reviews it. Your teammates have been asked to confirm their shares.'
+              : 'In review. This work appears on Explore once its checks pass.'}
+          </p>
+        )}
         <div className="work-top">
           <nav aria-label="Breadcrumb" className="crumbs desktop-only">
             <Link to="/">Explore</Link>
@@ -63,7 +74,7 @@ function WorkView({ w, me }: { w: Work; me: Me }) {
           </div>
           <div className="work-meta mobile-only">
             <p className="soft">{w.tags.join(' · ')}</p>
-            <p className="muted">{w.month} · {w.weeks} weeks · {w.team.length > 1 ? `Team of ${w.team.length}` : 'Solo'}</p>
+            <p className="muted">{w.month} · {weeks(w.weeks)} · {w.team.length > 1 ? `Team of ${w.team.length}` : 'Solo'}</p>
           </div>
           <div className="rating-row">
             <span className="score score-lg">
@@ -228,28 +239,28 @@ function Provenance({ w, className }: { w: Work; className?: string }) {
 }
 
 function Verification({ w }: { w: Work }) {
-  const checks: { title: string; icon: IconName; tone: string; date: string | null; body: string; done: string; missing: string }[] = [
-    { title: 'AI check', icon: 'sparkle', tone: 'blue', date: w.checks.ai, body: 'Files and claims reviewed. No issues found.', done: 'Passed', missing: 'Not run yet' },
-    { title: 'Club review', icon: 'shield', tone: 'lav', date: w.checks.club, body: "Approved by the club's Proof of Work & Quality team.", done: 'Approved', missing: 'Not reviewed by a club' },
+  const review = w.status === 'in_review';
+  const status = (date: string | null, waiting: boolean): CheckStatus => (date ? 'passed' : review && waiting ? 'pending' : 'missing');
+  const checks: { title: string; icon: IconName; tone: string; status: CheckStatus; body: string; statusText: string }[] = [
     {
-      title: 'Company sign-off', icon: 'building', tone: 'gold', date: w.checks.company,
-      body: w.company ? `${w.company.name} approved this work for public view.` : 'No company was involved in this work.', done: 'Signed off', missing: 'Not applicable',
+      title: 'AI check', icon: 'sparkle', tone: 'blue', status: status(w.checks.ai, true),
+      body: w.checks.ai ? 'Files and claims reviewed. No issues found.' : review ? 'Running now. Usually takes a few minutes.' : 'Not run yet',
+      statusText: w.checks.ai ? `Passed · ${w.checks.ai}` : 'Pending',
+    },
+    {
+      title: 'Club review', icon: 'shield', tone: 'lav', status: status(w.checks.club, !!w.club),
+      body: w.checks.club ? "Approved by the club's Proof of Work & Quality team." : review && w.club ? 'Proof of Work & Quality team, usually within 3 days.' : 'Not reviewed by a club',
+      statusText: w.checks.club ? `Approved · ${w.checks.club}` : review && w.club ? 'Pending' : 'Not reviewed by a club',
+    },
+    {
+      title: 'Company sign-off', icon: 'building', tone: 'gold', status: status(w.checks.company, w.kind === 'Paid brief'),
+      body: w.checks.company && w.company ? `${w.company.name} approved this work for public view.` : w.company ? 'Waiting for the company to sign off.' : 'No company was involved in this work.',
+      statusText: w.checks.company ? `Signed off · ${w.checks.company}` : review && w.kind === 'Paid brief' ? 'Pending' : 'Not applicable',
     },
   ];
   return (
     <div className="verify-grid">
-      {checks.map((c) => (
-        <div key={c.title} className={`verify-card${c.date ? '' : ' is-missing'}`}>
-          <span className={`tile tile-sm tile-${c.tone} tile-flat`}><Icon name={c.icon} size={20} /></span>
-          <span className="grow">
-            <b className="block">{c.title}</b>
-            <span className="small soft">{c.date ? c.body : c.missing}</span>
-          </span>
-          <span className="verify-status">
-            {c.date ? <><CheckBadge size={16} /><span className="desktop-only">{c.done} · {c.date}</span></> : <span className="muted small desktop-only">{c.missing}</span>}
-          </span>
-        </div>
-      ))}
+      {checks.map((c) => <CheckRow key={c.title} {...c} />)}
     </div>
   );
 }

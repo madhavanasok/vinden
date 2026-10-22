@@ -152,5 +152,30 @@ export async function migrate() {
       ref_id int NOT NULL,
       PRIMARY KEY (user_id, kind, ref_id)
     );
+
+    -- Added for the Club page. ADD COLUMN IF NOT EXISTS keeps databases seeded before it working.
+    ALTER TABLE clubs
+      ADD COLUMN IF NOT EXISTS short_name text,
+      ADD COLUMN IF NOT EXISTS city text,
+      ADD COLUMN IF NOT EXISTS started text,
+      ADD COLUMN IF NOT EXISTS earned int NOT NULL DEFAULT 0,
+      ADD COLUMN IF NOT EXISTS sessions int NOT NULL DEFAULT 0,
+      ADD COLUMN IF NOT EXISTS session_title text,
+      ADD COLUMN IF NOT EXISTS session_detail text;
+    ALTER TABLE tasks ADD COLUMN IF NOT EXISTS brief text;
+
+    -- Who holds which Core Team seat in a club.
+    CREATE TABLE IF NOT EXISTS core_team (
+      club_id int NOT NULL REFERENCES clubs (id),
+      user_id int NOT NULL REFERENCES users (id),
+      role text NOT NULL,
+      position int NOT NULL,
+      PRIMARY KEY (club_id, user_id)
+    );
+
+    -- Posted work stays 'in_review' until its checks run; only 'published' work shows in feeds.
+    ALTER TABLE works
+      ADD COLUMN IF NOT EXISTS status text NOT NULL DEFAULT 'published',
+      ADD COLUMN IF NOT EXISTS submitted_at timestamptz;
   `);
 }

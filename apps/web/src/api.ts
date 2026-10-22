@@ -82,6 +82,8 @@ export interface Work {
   cover: string;
   company: Company | null;
   club: { name: string; college: string } | null;
+  /** 'in_review' until the checks have run. */
+  status: 'published' | 'in_review';
   /** The date each check passed, or null if it hasn't happened. */
   checks: { ai: string | null; club: string | null; company: string | null };
   splitConfirmed: boolean;
@@ -92,6 +94,46 @@ export interface Work {
   vouches: Vouch[];
   myVouch: boolean;
   saved: boolean;
+}
+
+export interface ClubTask {
+  title: string;
+  brief: string | null;
+  due: string;
+  effort: string;
+  done: number;
+  total: number;
+  people: Person[];
+}
+
+export interface Club {
+  slug: string;
+  name: string;
+  college: string;
+  city: string | null;
+  started: string | null;
+  members: number;
+  coreTeamSize: number;
+  stats: { earned: number; verified: number; liveBriefs: number; sessions: number };
+  task: ClubTask | undefined;
+  briefs: Brief[];
+  works: WorkCard[];
+  coreTeam: (Person & { role: string })[];
+  session: { title: string; detail: string } | null;
+  /** Everyone in the club, for picking teammates. */
+  people: (Person & { line: string })[];
+}
+
+export type WorkKind = 'club-task' | 'paid-brief' | 'internship' | 'independent';
+
+export interface NewWork {
+  title: string;
+  kind: WorkKind;
+  category: string;
+  description: string;
+  files: { name: string; size: number }[];
+  team: { handle: string; role: string; share: number }[];
+  skills: string[];
 }
 
 export interface Profile extends Person {
@@ -128,6 +170,17 @@ export const useMe = () => useQuery({ queryKey: ['me'], queryFn: () => request<M
 export const useHome = () => useQuery({ queryKey: ['home'], queryFn: () => request<Home>('/api/home') });
 
 export const useWork = (slug: string) => useQuery({ queryKey: ['work', slug], queryFn: () => request<Work>(`/api/works/${slug}`) });
+
+export const useClub = () => useQuery({ queryKey: ['club'], queryFn: () => request<Club>('/api/club') });
+
+export function usePostWork() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (work: NewWork) =>
+      request<{ slug: string }>('/api/works', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(work) }),
+    onSuccess: () => qc.invalidateQueries(),
+  });
+}
 
 export const useProfile = (handle: string) => useQuery({ queryKey: ['profile', handle], queryFn: () => request<Profile>(`/api/people/${handle}`) });
 

@@ -108,6 +108,15 @@ const toBrief = (b: BriefRow) => ({
   saved: b.saved,
 });
 
+function liveBriefs(userId: number) {
+  return rows<BriefRow>(
+    `SELECT b.*, c.name AS company_name, c.initial, c.color, c.sector,
+       EXISTS (SELECT 1 FROM saves s WHERE s.user_id = $1 AND s.kind = 'brief' AND s.ref_id = b.id) AS saved
+     FROM briefs b JOIN companies c ON c.id = b.company_id ORDER BY b.position`,
+    [userId],
+  ).then((r) => r.map(toBrief));
+}
+
 /* ---------- Home ---------- */
 
 export async function getHome() {
@@ -122,15 +131,10 @@ export async function getHome() {
   const requests = await rows<{ name: string }>(
     'SELECT f.name FROM vouch_requests r JOIN users f ON f.id = r.from_user WHERE r.to_user = $1 ORDER BY f.id DESC', [u.id],
   );
-  const briefs = await rows<BriefRow>(
-    `SELECT b.*, c.name AS company_name, c.initial, c.color, c.sector,
-       EXISTS (SELECT 1 FROM saves s WHERE s.user_id = $1 AND s.kind = 'brief' AND s.ref_id = b.id) AS saved
-     FROM briefs b JOIN companies c ON c.id = b.company_id ORDER BY b.position`,
-    [u.id],
-  );
-  // Work by other people: what you might learn from, vouch for or hire from.
+  const briefs = await liveBriefs(u.id);
+  // Published work by other people: what you might learn from, vouch for or hire from.
   const works = await rows<WorkCardRow>(
-    `${WORK_CARDS} WHERE NOT EXISTS (SELECT 1 FROM work_members m WHERE m.work_id = w.id AND m.user_id = $1) ORDER BY w.position`,
+    `${WORK_CARDS} WHERE w.status = 'published' AND NOT EXISTS (SELECT 1 FROM work_members m WHERE m.work_id = w.id AND m.user_id = $1) ORDER BY w.position`,
     [u.id],
   );
 
@@ -150,9 +154,119 @@ export async function getHome() {
       nextSession: club.next_session,
     },
     task: task && { title: task.title, due: task.due, effort: task.effort, done: task.done, total: task.total, people: submitted.map(person) },
-    briefs: briefs.map(toBrief),
+    briefs,
     works: works.map(toWorkCard),
   };
+}
+
+/* ---------- Club ---------- */
+
+interface ClubRow {
+  id: number;
+  slug: string;
+  name: string;
+  short_name: string | null;
+  college: string;
+  city: string | null;
+  started: string | null;
+  members: number;
+  core_team: number;
+  earned: number;
+  sessions: number;
+  session_title: string | null;
+  session_detail: string | null;
+}
+
+/** The signed-in member's club: identity, stats, this week's task, briefs, verified club work and the Core Team. */
+export async function getClub() {
+  const u = await currentUser();
+  const c = await one<ClubRow>('SELECT * FROM clubs WHERE id = $1', [u.club_id]);
+  if (!c) return undefined;
+
+  const verified = (await one<{ n: number }>(
+    "SELECT count(*)::int AS n FROM works WHERE club_id = $1 AND club_reviewed IS NOT NULL AND status = 'published'", [c.id],
+  ))!.n;
+  const task = await one<{ title: string; brief: string | null; due: string; effort: string; done: number; total: number }>(
+    'SELECT * FROM tasks WHERE club_id = $1 ORDER BY id LIMIT 1', [c.id],
+  );
+  const posted = await rows<UserRow>("SELECT * FROM users WHERE handle IN ('kabir', 'ananya', 'meera', 'rohan') ORDER BY id DESC");
+  const briefs = await liveBriefs(u.id);
+  const works = await rows<WorkCardRow>(
+    `${WORK_CARDS} WHERE w.club_id = $2 AND w.club_reviewed IS NOT NULL AND w.status = 'published' ORDER BY w.position LIMIT 6`,
+    [u.id, c.id],
+  );
+  const coreTeam = await rows<UserRow & { seat: string }>(
+    'SELECT u.*, t.role AS seat FROM core_team t JOIN users u ON u.id = t.user_id WHERE t.club_id = $1 ORDER BY t.position', [c.id],
+  );
+  const members = await rows<UserRow>('SELECT * FROM users WHERE club_id = $1 ORDER BY name', [c.id]);
+
+  return {
+    slug: c.slug,
+    name: c.short_name ?? c.name,
+    college: c.college,
+    city: c.city,
+    started: c.started,
+    members: c.members,
+    coreTeamSize: c.core_team,
+    stats: { earned: c.earned, verified, liveBriefs: briefs.length, sessions: c.sessions },
+    task: task && {
+      title: task.title, brief: task.brief, due: task.due, effort: task.effort, done: task.done, total: task.total,
+      people: posted.map(person),
+    },
+    briefs,
+    works: works.map(toWorkCard),
+    coreTeam: coreTeam.map((m) => ({ ...person(m), role: m.seat })),
+    session: c.session_title ? { title: c.session_title, detail: c.session_detail ?? '' } : null,
+    people: members.map((m) => ({ ...person(m), line: m.headline })),
+  };
+}
+
+/* ---------- Posting work ---------- */
+
+export const WORK_KINDS = { 'club-task': 'Club task', 'paid-brief': 'Paid brief', internship: 'Internship', independent: 'Independent project' } as const;
+const COVER_FOR: Record<string, string> = { Business: 'cac', Design: 'library-phones', Data: 'canteen-bars', Research: 'tam-circles' };
+
+export interface NewWork {
+  title: string;
+  kind: keyof typeof WORK_KINDS;
+  category: string;
+  description: string;
+  files: { name: string; size: number }[];
+  team: { handle: string; role: string; share: number }[];
+  skills: string[];
+}
+
+/** Flow 2: saves the work as 'in_review'. The AI check and club review would run from here. */
+export async function createWork(input: NewWork): Promise<{ slug: string } | { error: string }> {
+  const u = await currentUser();
+  const handles = input.team.map((m) => m.handle);
+  const total = input.team.reduce((sum, m) => sum + m.share, 0);
+  if (total !== 100) return { error: `Shares add up to ${total}%. They need to add up to 100%.` };
+  if (!handles.includes(u.handle)) return { error: 'Add yourself to the team.' };
+  if (new Set(handles).size !== handles.length) return { error: 'Each teammate can only be added once.' };
+  const members = await rows<{ id: number; handle: string }>('SELECT id, handle FROM users WHERE handle = ANY($1)', [handles]);
+  if (members.length !== handles.length) return { error: 'One of your teammates doesn’t have a Vinden account yet.' };
+
+  const base = input.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 48) || 'work';
+  let slug = base;
+  for (let i = 2; await one('SELECT 1 FROM works WHERE slug = $1', [slug]); i++) slug = `${base}-${i}`;
+  const inClub = input.kind === 'club-task' || input.kind === 'paid-brief';
+  const position = (await one<{ p: number }>('SELECT COALESCE(max(position), 0) + 1 AS p FROM works'))!.p;
+
+  const work = (await one<{ id: number }>(
+    `INSERT INTO works (slug, title, card_title, kind, category, subcategory, tags, skills, month, weeks, summary, files, cover,
+       club_id, split_confirmed, position, status, submitted_at)
+     VALUES ($1, $2, $2, $3, $4, $3, $5, $6, $7, 1, $8, $9, $10, $11, $12, $13, 'in_review', now()) RETURNING id`,
+    [slug, input.title, WORK_KINDS[input.kind], input.category, input.skills.slice(0, 3), input.skills,
+      new Date().toLocaleString('en-GB', { month: 'short', year: 'numeric' }),
+      input.description.split(/\n+/).map((p) => p.trim()).filter(Boolean), input.files.length, COVER_FOR[input.category] ?? 'cac',
+      inClub ? u.club_id : null, input.team.length === 1, position],
+  ))!;
+  for (const [i, m] of input.team.entries()) {
+    const id = members.find((x) => x.handle === m.handle)!.id;
+    await one('INSERT INTO work_members (work_id, user_id, role, share, position) VALUES ($1, $2, $3, $4, $5)', [work.id, id, m.role, m.share, i]);
+  }
+  return { slug };
 }
 
 /* ---------- Proof of Work ---------- */
@@ -176,6 +290,7 @@ interface WorkRow {
   club_reviewed: string | null;
   company_signed: string | null;
   split_confirmed: boolean;
+  status: 'published' | 'in_review';
   company_name: string | null;
   company_initial: string | null;
   company_color: string | null;
@@ -225,6 +340,7 @@ export async function getWork(slug: string) {
     cover: w.cover,
     company: w.company_name ? { name: w.company_name, initial: w.company_initial!, color: w.company_color! } : null,
     club: w.club_name ? { name: w.club_name, college: w.college! } : null,
+    status: w.status,
     checks: { ai: w.ai_checked, club: w.club_reviewed, company: w.company_signed },
     splitConfirmed: w.split_confirmed,
     team: team.map((m) => ({ ...person(m), role: m.role, share: m.share })),

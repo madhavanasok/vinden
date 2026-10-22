@@ -174,6 +174,34 @@ const WORKS: WorkSeed[] = [
 const insert = async (sql: string, params: unknown[]) => (await one<{ id: number }>(`${sql} RETURNING id`, params))!.id;
 
 /** Fills an empty database with the demo data. Does nothing once data exists. */
+const CORE_TEAM: [handle: string, role: string][] = [
+  ['ananya', 'President'],
+  ['kabir', 'Learning & Development'],
+  ['meera', 'Proof of Work & Quality'],
+  ['rahul', 'Industry & Outreach'],
+  ['rohan', 'Community & Events'],
+];
+
+/** Club page data. Runs on every start and fills in databases seeded before the Club page existed. */
+export async function seedClub() {
+  if (await one('SELECT 1 FROM core_team LIMIT 1')) return;
+  const club = await one<{ id: number }>("SELECT id FROM clubs WHERE slug = 'meridian'");
+  if (!club) return;
+  await one(
+    `UPDATE clubs SET short_name = 'Vinden Club Meridian', city = 'Pune', started = 'Aug 2025', earned = 140000, sessions = 18,
+       session_title = 'Landing your first growth role', session_detail = 'Alumni session with Priya Nair · Thu 30 Oct, 6 pm'
+     WHERE id = $1`,
+    [club.id],
+  );
+  await one('UPDATE tasks SET brief = $2 WHERE club_id = $1', [
+    club.id, 'Estimate how many students order food online each week, and what they spend. Show your method.',
+  ]);
+  for (const [position, [handle, role]] of CORE_TEAM.entries()) {
+    await one('INSERT INTO core_team (club_id, user_id, role, position) SELECT $1, id, $2, $3 FROM users WHERE handle = $4', [club.id, role, position, handle]);
+    if (handle !== 'ananya') await one("UPDATE users SET club_role = 'Core Team · Vinden Club Meridian' WHERE handle = $1", [handle]);
+  }
+}
+
 export async function seed() {
   if (await one('SELECT 1 FROM users LIMIT 1')) return;
 

@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react';
+import { useState, type FormEvent, type ReactNode } from 'react';
 import { Link, NavLink, Outlet, useLocation, useNavigate, useSearchParams } from 'react-router';
 import { useMe } from '../api';
 import { Avatar, Logo } from './Bits';
@@ -128,6 +128,22 @@ export function MobileBar() {
       </div>
     </div>
   );
+}
+
+/** The phone top bar for anything opened from a tab: back, title and an optional note such as "Step 2 of 4". */
+export function PageBar({ title, note, onBack }: { title: string; note?: string; onBack: () => void }) {
+  return (
+    <div className="mobile-bar page-bar mobile-only">
+      <button type="button" className="icon-btn bare" aria-label="Back" onClick={onBack}><Icon name="arrowLeft" size={22} /></button>
+      <span className="page-bar-title">{title}</span>
+      {note && <span className="small soft page-bar-note">{note}</span>}
+    </div>
+  );
+}
+
+/** Phone-only bar fixed above the safe area, carrying the page's main action. On desktop the action lives in a side panel. */
+export function ActionBar({ children }: { children: ReactNode }) {
+  return <div className="action-bar mobile-only">{children}</div>;
 }
 
 function TabBar() {
