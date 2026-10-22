@@ -30,10 +30,15 @@ The ports differ from Vite's default 5173 so Vinden can run alongside other loca
 - **Home** (`/`): search, your journey, your club's task, live problem statements, verified work. Filter by Saved, problem statements or verified work, or by category from the header.
 - **Proof of Work** (`/work/:slug`): the work, how it was verified (AI check, club review, company sign-off), who did what, and weighted vouches. Vouch for it, or undo.
 - **Profile** (`/people/:handle`): identity, stats, milestones, verified work, experience with its verification method, and the journey timeline.
+- **Club** (`/club`): your club's stats, this week's task, live problem statements, recently verified club work, the Core Team and the next session.
+- **Post work** (`/post`): the four steps of posting Proof of Work: what you made, who did what (roles and shares adding up to 100%), skills and visibility, then review and send. On desktop every step sits on one page with a sticky summary; on phones it's one step per screen. Sent work opens with its checks pending.
 
 One responsive layout: at 768px and wider you get the desktop header and two-column pages; below that, the phone layout with a bottom tab bar.
 
 ## Other folders
+
+- `.claude/skills/`: project skills for Claude Code (product rules, information architecture, visual guidelines, the build workflow, and one skill per design-system component). Start with `.claude/skills/README.md`.
+- `docs/`: the design rationale and the roles and UX flows.
 
 - `design/app-screens/` — the original screen designs (Claude Design canvas source): https://claude.ai/artifact/ThUjju4nKmcXNww3o9xVja (private until shared).
 - `assets/` — the Sunrise logo, cut out with transparent corners.
