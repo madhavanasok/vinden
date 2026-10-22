@@ -323,8 +323,8 @@ function PostForm({ me, club }: { me: Me; club: Club | null }) {
         <ActionBar>
           <button type="button" className="btn btn-outline btn-lg" onClick={back}>Back</button>
           {step < STEPS.length - 1
-            ? <button type="button" className="btn btn-primary btn-lg grow" onClick={next}>Continue</button>
-            : <button type="submit" className="btn btn-accent btn-lg grow" disabled={post.isPending}>{post.isPending ? 'Sending…' : 'Send for verification'}</button>}
+            ? <button key="next" type="button" className="btn btn-primary btn-lg grow" onClick={next}>Continue</button>
+            : <button key="send" type="submit" className="btn btn-accent btn-lg grow" disabled={post.isPending}>{post.isPending ? 'Sending…' : 'Send for verification'}</button>}
         </ActionBar>
       </form>
     </>

@@ -1948,3 +1948,86 @@ a.person-row:hover b { text-decoration: underline; text-underline-offset: 3px; }
 .post-side .verify-card { flex-direction: row; align-items: center; gap: 12px; padding: 14px; }
 .post-side .verify-status { margin-top: 0; }
 .task-card .badge { text-transform: uppercase; }
+
+/* ---------- Phone layouts for forms, Club and Post work (vinden-mob) ---------- */
+
+.action-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px var(--gutter) max(16px, env(safe-area-inset-bottom));
+  border-top: 1px solid var(--color-border-default);
+  background: var(--color-bg-surface);
+  box-shadow: var(--shadow-float);
+}
+.action-bar .grow { flex: 1; }
+
+@media (max-width: 767px) {
+  /* Bars */
+  .page-bar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    gap: 4px;
+    padding: 10px var(--gutter) 10px 8px;
+    border-bottom: 1px solid var(--color-border-default);
+    background: var(--color-bg-page);
+  }
+  .page-bar-title { flex: 1; min-width: 0; font-family: var(--font-display); font-size: 18px; font-weight: 800; line-height: 24px; }
+  .page-bar-note { white-space: nowrap; }
+
+  /* Fields */
+  .option-grid { grid-template-columns: 1fr; }
+  .upload-zone { padding: 20px 16px; }
+  .teammate {
+    grid-template-columns: minmax(0, 1fr) 96px;
+    grid-template-areas: 'who remove' 'role share';
+    gap: 10px 8px;
+    padding: 12px;
+  }
+  .teammate-who { grid-area: who; }
+  .teammate-role { grid-area: role; }
+  .share-input { grid-area: share; }
+  .teammate-remove { grid-area: remove; justify-self: end; }
+  .skill-input { flex-wrap: wrap; }
+  .skill-input .field-input { flex-basis: 100%; }
+
+  /* Club */
+  .club-page { padding-top: 20px; padding-bottom: 32px; }
+  .club-header { gap: 20px; padding-bottom: 20px; }
+  .club-identity { align-items: flex-start; gap: 14px; }
+  .club-identity .logo { width: 56px; height: 56px; border-radius: 15px !important; }
+  .club-title { margin: 2px 0 8px; font-size: 22px; line-height: 28px; letter-spacing: -0.02em; }
+  .club-meta { gap: 8px 10px; font-size: 14px; }
+  .club-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding: 16px; }
+  .club-stats .stat-value { font-size: 20px; line-height: 26px; }
+  .club-stats .stat-label { font-size: 13px; line-height: 18px; }
+  .page-tabs { gap: 24px; margin: 0 calc(-1 * var(--gutter)); padding: 0 var(--gutter); }
+  .club-layout { grid-template-columns: 1fr; gap: 32px; padding-top: 24px; }
+  .club-main { gap: 32px; }
+  .club-main .section-head { margin-bottom: 0; }
+  .club-main .section-head + .task-card { margin-top: 14px; }
+  .task-card { padding: 16px; }
+  .side-card,
+  .money-note { padding: 16px; }
+
+  /* Post work: one step per screen, with Back and Continue in the action bar */
+  .post-page { padding-top: 0; padding-bottom: 24px; }
+  .post-head { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .post-progress { padding-top: 12px; }
+  .post-layout { display: block; }
+  .post-main { gap: 0; }
+  .post-step:not(.is-current) { display: none; }
+  .post-step,
+  .post-step.is-active { gap: 16px; padding: 20px 0 0; border: 0; border-radius: 0; background: none; }
+  .post-step > .eyebrow { display: none; }
+  .post-step-title { font-size: 28px; line-height: 34px; letter-spacing: -0.025em; }
+  .post-step-sub { margin-top: -8px; font-size: 15px; line-height: 22px; }
+  .post-side { position: static; display: flex; flex-direction: column; gap: 16px; }
+  .post-side .verify-card { padding: 12px; }
+}

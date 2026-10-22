@@ -30,7 +30,8 @@ export function Layout() {
         <Outlet />
       </main>
       <Footer />
-      <TabBar />
+      {/* Flows like Post work bring their own Action bar on phones, so the tab bar steps aside. */}
+      {pathname !== '/post' && <TabBar />}
     </>
   );
 }
