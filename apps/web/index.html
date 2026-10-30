@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#FDFBF6" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#07142F" media="(prefers-color-scheme: dark)" />
+    <script>
+      // Apply a saved theme before first paint, so a dark page never flashes light. No saved choice: follow the system.
+      try {
+        const theme = localStorage.getItem('vinden.theme');
+        if (theme === 'light' || theme === 'dark') {
+          document.documentElement.dataset.theme = theme;
+          for (const m of document.querySelectorAll('meta[name="theme-color"]')) m.content = theme === 'dark' ? '#07142F' : '#FDFBF6';
+        }
+      } catch {}
+    </script>
+    <link rel="icon" href="/vinden-logo-sunrise.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/vinden-logo-sunrise.png" />
+    <title>Vinden</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

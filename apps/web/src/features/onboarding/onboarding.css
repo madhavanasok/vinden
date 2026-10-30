@@ -1,0 +1,264 @@
+/* onboarding feature styles. Desktop base, then tablet (768–1099 px), then phone (max-width: 767px). Tokens only. */
+
+/* ---------- Step screen (components/StepScreen.tsx) ---------- */
+
+.step-progress { display: flex; flex-direction: column; gap: 8px; max-width: 360px; margin-top: 20px; }
+.step-screen { margin-top: 28px; }
+.step-body {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 28px;
+  border: 1px solid var(--color-border-default);
+  border-radius: 20px;
+  background: var(--color-bg-surface);
+}
+.step-foot { display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px; }
+.step-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 20px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: var(--color-bg-error);
+  color: var(--color-text-error);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 22px;
+}
+.step-error .icon { flex-shrink: 0; margin-top: 1px; }
+.step-section { display: flex; flex-direction: column; gap: 12px; }
+.step-section-title { font-family: var(--font-display); font-size: 17px; font-weight: 800; line-height: 22px; letter-spacing: -0.01em; }
+.step-body .notice { margin-top: 0; }
+.step-body .divider { margin: 0; }
+.step-links { font-size: 15px; line-height: 22px; color: var(--color-text-secondary); }
+
+/* Communities step: the club's community first, then a grid of cards. */
+.step-communities { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin: 0; padding: 0; list-style: none; }
+.step-communities .community-card { height: 100%; }
+
+/* A native select with the text field look and a chevron. */
+.select-wrap { position: relative; display: block; }
+.select-wrap select.field-input { appearance: none; padding-right: 44px; cursor: pointer; }
+.select-wrap .icon { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); pointer-events: none; color: var(--color-text-secondary); }
+
+/* A link that opens another step: Add a role. */
+.step-link-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 72px;
+  padding: 14px 16px;
+  border: 1px solid var(--color-border-default);
+  border-radius: 16px;
+  background: var(--color-bg-surface);
+  color: inherit;
+  text-decoration: none;
+  line-height: 20px;
+}
+.step-link-card:hover { border-color: var(--color-border-strong); }
+.step-link-card > .icon { color: var(--color-text-tertiary); }
+
+/* Roles already added, with their verification state. */
+.role-list { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.role-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; min-height: 56px; padding: 10px 0; border-top: 1px solid var(--color-border-subtle); line-height: 20px; }
+.role-row:first-child { border-top: 0; }
+.role-row .company-square { width: 40px; height: 40px; border-radius: 10px; font-size: 16px; }
+
+/* Demo-only notes: dashed and tinted like the demo bar so they never read as product UI. */
+.demo-note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  border: 1px dashed var(--color-border-strong);
+  border-radius: 12px;
+  background: var(--color-bg-subtle);
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--color-text-secondary);
+  overflow-wrap: anywhere;
+}
+.demo-note a { font-weight: 700; color: var(--color-text-primary); }
+
+/* ---------- Sign up ---------- */
+
+.signup-alt { font-size: 15px; line-height: 22px; color: var(--color-text-secondary); }
+.signed-in {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  margin-top: 28px;
+  padding: 20px;
+  border: 1px solid var(--color-border-default);
+  border-radius: 20px;
+  background: var(--color-bg-surface);
+}
+.signed-in .grow { flex: 1 1 200px; min-width: 0; line-height: 22px; }
+.signed-in + .demo-note { margin-top: 16px; }
+
+/* ---------- Sent for verification ---------- */
+
+.sent-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  margin-top: 28px;
+  padding: 28px;
+  border: 1px solid var(--color-border-default);
+  border-radius: 20px;
+  background: var(--color-bg-surface);
+  font-size: 17px;
+  line-height: 27px;
+}
+.sent-card .demo-note { align-self: stretch; }
+
+/* ---------- Complete your profile: the panel on Home (FN-02-I02) ---------- */
+
+.complete-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
+  border: 1px solid var(--color-border-default);
+  border-radius: 20px;
+  background: var(--color-bg-surface);
+}
+.complete-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 8px 24px; }
+.complete-head > div { flex: 1 1 280px; min-width: 0; }
+.complete-title { font-size: 22px; line-height: 28px; letter-spacing: -0.02em; }
+.complete-head p { margin-top: 4px; }
+.complete-percent { font-size: 15px; color: var(--color-text-secondary); white-space: nowrap; }
+.complete-percent b { margin-right: 4px; font-size: 28px; line-height: 34px; color: var(--color-text-primary); }
+.complete-steps { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 8px 16px; margin: 4px 0 0; padding: 0; list-style: none; }
+.complete-steps > li { display: flex; min-width: 0; }
+.complete-step {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 64px;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 14px;
+  color: inherit;
+  text-decoration: none;
+  line-height: 20px;
+}
+.complete-step:hover { border-color: var(--color-border-strong); }
+.complete-step b { font-size: 15px; }
+.complete-step .grow { display: flex; flex-direction: column; min-width: 0; }
+.complete-step-title { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 8px; }
+.complete-step > .icon { flex-shrink: 0; color: var(--color-text-tertiary); }
+.complete-step .pill { height: 24px; padding: 0 10px; font-size: 12px; }
+
+/* ---------- Confirm a past role (FN-03-I02): opened from an email, no app chrome ---------- */
+
+.confirm-page { min-height: 100dvh; display: flex; flex-direction: column; background: var(--color-bg-page); }
+.confirm-top { border-bottom: 1px solid var(--color-border-default); background: var(--color-bg-surface); }
+.confirm-top .container { display: flex; align-items: center; min-height: 68px; }
+.confirm-main { flex: 1; width: 100%; max-width: calc(600px + 2 * var(--gutter)); padding-top: 48px; padding-bottom: 64px; }
+.confirm-card {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 32px;
+  border: 1px solid var(--color-border-default);
+  border-radius: 20px;
+  background: var(--color-bg-surface);
+  box-shadow: var(--shadow-card);
+}
+.confirm-title { font-size: 32px; line-height: 40px; letter-spacing: -0.02em; }
+.confirm-claim { display: flex; align-items: flex-start; gap: 14px; font-size: 17px; line-height: 27px; }
+.confirm-claim p { min-width: 0; }
+.confirm-card .button-row .btn { min-width: 200px; }
+.confirm-foot { font-size: 14px; line-height: 20px; color: var(--color-text-tertiary); }
+
+/* ---------- Profile (FN-02-I01): additions to the profile layout in styles.css ---------- */
+
+.profile-skills { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--color-border-subtle); }
+.profile-skills .tag-row { margin: 0; padding: 0; list-style: none; }
+.profile-skills .tag { gap: 6px; }
+.skills-key { display: flex; align-items: center; gap: 6px; }
+.profile-work { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.work-part { font-size: 14px; line-height: 20px; color: var(--color-text-secondary); }
+.work-part b { color: var(--color-text-primary); font-weight: 600; }
+.work-filter { margin-top: 16px; }
+.profile-section .notice { margin-top: 16px; }
+.profile-section .section-head { margin: 0; }
+.experience .pill { white-space: normal; height: auto; min-height: 28px; padding-block: 4px; }
+.experience-note { margin-top: 6px; overflow-wrap: anywhere; }
+
+/* Journey: one vertical timeline at every size, newest first. */
+.journey-list {
+  position: relative;
+  margin: 20px 0 0;
+  padding: 24px;
+  border: 1px solid var(--color-border-default);
+  border-radius: 20px;
+  background: var(--color-bg-surface);
+  list-style: none;
+}
+.journey-item { position: relative; display: flex; gap: 14px; padding-bottom: 20px; }
+.journey-item:last-child { padding-bottom: 0; }
+.journey-item::after {
+  content: '';
+  position: absolute;
+  left: 17px;
+  top: 40px;
+  bottom: 4px;
+  width: 2px;
+  background: var(--color-border-subtle);
+}
+.journey-item:last-child::after { display: none; }
+.journey-item .tile { color: var(--color-text-primary); }
+.journey-item .grow { display: flex; flex-direction: column; min-width: 0; padding-top: 1px; line-height: 21px; }
+.journey-item b { font-size: 15px; }
+.journey-item a { color: inherit; text-decoration: none; }
+.journey-item a:hover b { text-decoration: underline; text-underline-offset: 3px; }
+.journey-kind { font-size: 13px; line-height: 18px; color: var(--color-text-tertiary); }
+.tile-flat.tile-neutral { background: var(--color-bg-subtle); }
+.journey-more { margin-top: 12px; }
+
+/* ---------- Tablet (768–1099 px) ---------- */
+
+@media (min-width: 768px) and (max-width: 1099px) {
+  .step-body { padding: 24px; }
+  .confirm-main { padding-top: 40px; }
+  .complete-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* ---------- Phone (up to 767 px) ---------- */
+
+@media (max-width: 767px) {
+  .step-progress { max-width: none; margin-top: 16px; }
+  .step-screen { margin-top: 20px; }
+  .step-body { gap: 20px; padding: 0; border: 0; border-radius: 0; background: none; }
+  .step-communities { grid-template-columns: 1fr; }
+  .step-error { margin-top: 16px; }
+  .sent-card,
+  .signed-in { padding: 16px; font-size: 15px; line-height: 23px; }
+  .sent-card .button-row,
+  .sent-card .button-row .btn { width: 100%; }
+
+  .complete-panel { gap: 14px; padding: 16px; border-radius: 16px; }
+  .complete-title { font-size: 20px; line-height: 26px; }
+  .complete-percent b { font-size: 22px; line-height: 28px; }
+  .complete-steps { grid-template-columns: 1fr; gap: 0; margin-top: 0; }
+  .complete-step { min-height: 60px; padding: 8px 0; border: 0; border-top: 1px solid var(--color-border-subtle); border-radius: 0; }
+
+  .confirm-main { padding-top: 24px; padding-bottom: 40px; }
+  .confirm-card { gap: 16px; padding: 20px; border-radius: 16px; }
+  .confirm-title { font-size: 24px; line-height: 30px; }
+  .confirm-claim { font-size: 15px; line-height: 23px; }
+  .confirm-card .button-row,
+  .confirm-card .button-row .btn { width: 100%; }
+
+  .profile-skills { margin-top: 16px; }
+  .work-filter { margin-top: 12px; }
+  .journey-list { padding: 0; border: 0; border-radius: 0; background: none; }
+}

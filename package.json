@@ -1,0 +1,18 @@
+{
+  "name": "vinden",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "concurrently -n api,web -c magenta,cyan \"npm:dev -w apps/api\" \"npm:dev -w apps/web\"",
+    "build": "npm run build -w apps/web",
+    "typecheck": "npm run typecheck -w apps/api && npm run typecheck -w apps/web",
+    "db:reset": "npm run db:reset -w apps/api"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}

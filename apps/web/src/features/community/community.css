@@ -1,0 +1,341 @@
+/* Community feature styles (FN-08 Communities, FN-09 Vinden Club, FN-10 Club recruitment).
+   Desktop base (1100 px and up), then tablet (768 to 1099 px), then phone (767 px and down). Tokens only. */
+
+/* ---------- Lists that reuse .rail: no bullets ---------- */
+.community-rail,
+.community-grid,
+.club-members,
+.club-links,
+.club-list,
+.club-portfolio,
+.community-posts,
+.request-list,
+.applicant-list,
+.core-roles,
+.factor-list,
+.apply-facts,
+.club-recruiting-facts {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.community-rail > li,
+.community-grid > li { display: flex; min-width: 0; }
+
+/* ---------- Communities ---------- */
+.community-filter-note { margin-top: 16px; font-size: 15px; line-height: 22px; }
+.community-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 28px 20px; margin-top: 20px; }
+
+/* ---------- Community card as a link (components/CommunityCardLink.tsx) ---------- */
+.community-link { position: relative; isolation: isolate; flex: 1; min-width: 0; height: 100%; border-radius: 16px; transition: box-shadow 0.15s; }
+.community-link:hover { box-shadow: var(--shadow-card); }
+.community-link-cover { position: absolute; inset: 0; z-index: 1; border-radius: 16px; }
+.community-link-cover:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+.community-link .community-body .btn { position: relative; z-index: 2; }
+.community-link:hover .community-name { text-decoration: underline; text-underline-offset: 3px; }
+
+/* ---------- Community page ---------- */
+.community-facts { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin-top: 20px; font-size: 15px; }
+.community-facts a { color: inherit; }
+.community-facts-tile {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.community-layout { display: grid; grid-template-columns: minmax(0, 1fr) 340px; align-items: start; gap: 32px; margin-top: 28px; }
+.community-main { display: flex; flex-direction: column; min-width: 0; }
+.community-main > .tab-row { margin-top: 0; }
+.community-side { display: flex; flex-direction: column; gap: 20px; }
+
+.community-admin-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding: 12px 16px;
+  border-radius: 16px;
+  background: var(--color-bg-subtle);
+}
+
+.community-posts { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
+.community-post {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 20px;
+  border: 1px solid var(--color-border-default);
+  border-radius: 16px;
+  background: var(--color-bg-surface);
+}
+.community-post-title { font-family: var(--font-display); font-size: 17px; font-weight: 700; line-height: 23px; letter-spacing: -0.01em; }
+.community-post-body { font-size: 15px; line-height: 22px; color: var(--color-text-secondary); white-space: pre-line; }
+.community-post-by { margin-top: 4px; }
+.community-post-by a { color: var(--color-text-secondary); }
+.community-event { flex-direction: row; align-items: flex-start; gap: 14px; }
+.community-event > .grow { display: flex; flex-direction: column; gap: 6px; }
+.community-event-when { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; font-size: 14px; font-weight: 700; color: var(--color-text-primary); }
+
+.community-about { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; font-size: 14px; line-height: 20px; }
+.community-about > div { display: flex; justify-content: space-between; gap: 12px; }
+.community-about dt { color: var(--color-text-tertiary); }
+.community-about dd { margin: 0; text-align: right; font-weight: 600; }
+.community-admin { display: inline-flex; align-items: center; gap: 8px; color: inherit; }
+
+.community-club { background: var(--color-bg-club); border-color: transparent; }
+.community-club .pill { align-self: flex-start; background: var(--color-bg-surface); }
+.community-club-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+
+/* The admin's composer */
+.community-composer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding: 20px;
+  border: 2px solid var(--color-action-primary);
+  border-radius: 16px;
+  background: var(--color-bg-surface);
+}
+.community-kind { display: flex; gap: 8px; margin: 0; padding: 0; border: 0; }
+.community-kind .chip.is-on { background: var(--color-action-primary); border-color: var(--color-action-primary); color: var(--color-text-inverse); }
+.community-kind .chip:has(input:focus-visible) { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+.community-composer-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.community-composer-actions,
+.community-form-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; }
+
+/* Create a community */
+.community-form { display: flex; flex-direction: column; gap: 24px; margin-top: 32px; }
+.community-select { cursor: pointer; }
+
+/* Join requests */
+.request-list { display: flex; flex-direction: column; border: 1px solid var(--color-border-default); border-radius: 16px; background: var(--color-bg-surface); }
+.request-list > li { padding: 4px 16px; }
+.request-list > li + li { border-top: 1px solid var(--color-border-subtle); }
+.request-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+.request-error { margin-top: 16px; }
+
+/* ---------- Club (no club yet) ---------- */
+.club-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 32px; margin-top: 16px; }
+.club-list { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
+.club-list-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  border: 1px solid var(--color-border-default);
+  border-radius: 16px;
+  background: var(--color-bg-surface);
+  color: inherit;
+  text-decoration: none;
+}
+.club-list-item:hover { box-shadow: var(--shadow-card); }
+.club-list-item:hover b { text-decoration: underline; text-underline-offset: 3px; }
+.club-list-item > .icon { color: var(--color-text-tertiary); }
+
+/* ---------- Club page ---------- */
+.club-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.club-links { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; margin-top: 16px; }
+.club-links-panel .section-head { margin-bottom: 0; }
+.club-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 72px;
+  padding: 14px 16px;
+  border: 1px solid var(--color-border-default);
+  border-radius: 16px;
+  background: var(--color-bg-surface);
+  color: inherit;
+  text-decoration: none;
+}
+.club-link:hover { box-shadow: var(--shadow-card); }
+.club-link:hover b { text-decoration: underline; text-underline-offset: 3px; }
+.club-link > .icon { color: var(--color-text-tertiary); }
+
+.club-recruiting { display: flex; flex-direction: column; gap: 10px; padding: 20px; border-radius: 16px; background: var(--color-bg-club); }
+.club-recruiting-facts { display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 15px; font-weight: 600; }
+.club-recruiting-facts li { display: inline-flex; align-items: center; gap: 6px; color: var(--color-text-club); }
+.club-recruiting-facts li span,
+.club-recruiting-facts li { line-height: 22px; }
+
+.club-members { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 24px; margin-top: 8px; }
+.club-members-more { margin-top: 8px; }
+
+.core-roles { display: flex; flex-direction: column; margin-top: 4px; }
+.core-role { padding: 10px 0; }
+.core-role + .core-role { border-top: 1px solid var(--color-border-subtle); }
+.core-role-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; font-size: 14px; line-height: 20px; }
+.core-role-head .small { white-space: nowrap; }
+.core-role .person-row { min-height: 52px; padding: 4px 0; }
+.core-role-open { margin-top: 2px; }
+#community .community-link { margin-top: 8px; }
+
+/* ---------- Club portfolio (components/ClubProjectCard.tsx) ---------- */
+.eyebrow-link { color: var(--color-text-club); text-decoration: none; }
+.eyebrow-link:hover { text-decoration: underline; text-underline-offset: 3px; }
+.club-portfolio { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 32px 20px; margin-top: 28px; }
+.club-project { display: flex; flex-direction: column; gap: 12px; height: 100%; }
+.club-project-team { display: flex; flex-direction: column; gap: 6px; padding-top: 12px; border-top: 1px solid var(--color-border-subtle); }
+.club-project-team ul { display: flex; flex-direction: column; gap: 2px; margin: 0; padding: 0; list-style: none; }
+.club-project-label { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-text-tertiary); }
+.club-project-person { display: flex; align-items: center; gap: 10px; min-height: 44px; color: inherit; text-decoration: none; }
+.club-project-person .grow { display: flex; flex-direction: column; min-width: 0; }
+.club-project-person b { font-size: 14px; line-height: 20px; }
+.club-project-person .small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.club-project-person:hover b { text-decoration: underline; text-underline-offset: 3px; }
+.club-project-more { min-height: 44px; display: inline-flex; align-items: center; }
+
+/* ---------- Selection steps (components/ApplicantSteps.tsx) ---------- */
+.applicant-steps { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; }
+.applicant-steps ol { display: flex; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.applicant-step { display: flex; align-items: center; gap: 10px; min-height: 36px; font-size: 14px; font-weight: 600; color: var(--color-text-tertiary); }
+.applicant-steps-row .applicant-step { flex: 1; }
+.applicant-steps-row .applicant-step + .applicant-step::before { content: ''; flex: 0 0 16px; height: 2px; background: var(--color-border-default); }
+.applicant-steps-column ol { flex-direction: column; gap: 0; }
+.applicant-steps-column .applicant-step { position: relative; min-height: 44px; }
+.applicant-steps-column .applicant-step + .applicant-step::before {
+  content: '';
+  position: absolute;
+  left: 13px;
+  top: -8px;
+  width: 2px;
+  height: 16px;
+  background: var(--color-border-default);
+}
+.applicant-step .step-marker { flex-shrink: 0; font-size: 13px; }
+.applicant-step.is-done { color: var(--color-text-secondary); }
+.applicant-step.is-done .step-marker { border-color: var(--color-trust-score); background: var(--color-trust-score); color: var(--color-text-inverse); }
+.applicant-step.is-current { color: var(--color-text-primary); }
+.applicant-step.is-current .step-marker { border-color: var(--color-action-primary); background: var(--color-action-primary); color: var(--color-text-inverse); }
+.applicant-step.is-ended { color: var(--color-text-tertiary); }
+.applicant-steps-end { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 700; color: var(--color-text-secondary); }
+.applicant-steps-end.is-selected { color: var(--color-text-club); }
+
+/* ---------- Apply ---------- */
+.apply-open { margin-top: 28px; background: var(--color-bg-club); color: var(--color-text-club); }
+.apply-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 24px; margin-top: 16px; font-size: 15px; }
+.apply-facts li { display: flex; align-items: center; gap: 10px; font-weight: 600; }
+.apply-facts .icon { flex-shrink: 0; color: var(--color-text-club); }
+.apply-steps { display: flex; flex-direction: column; gap: 8px; margin: 16px 0 0; padding: 0; list-style: none; }
+.apply-steps li { display: flex; align-items: center; gap: 12px; font-size: 15px; font-weight: 600; }
+.apply-steps .step-marker { flex-shrink: 0; font-size: 13px; }
+.apply-form { display: flex; flex-direction: column; gap: 20px; }
+.apply-answers { display: flex; flex-direction: column; gap: 16px; margin-top: 8px; }
+.apply-answers dt { font-size: 14px; font-weight: 700; line-height: 20px; }
+.apply-answers dd { margin: 4px 0 0; font-size: 15px; line-height: 23px; color: var(--color-text-secondary); white-space: pre-line; }
+.apply-done { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 28px; }
+
+/* ---------- Applications ---------- */
+.selection-progress {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  margin-top: 24px;
+  padding: 16px 20px;
+  border: 1px solid var(--color-border-default);
+  border-radius: 16px;
+  background: var(--color-bg-surface);
+}
+.selection-progress p { font-family: var(--font-display); font-size: 17px; }
+.selection-progress .progress-bar { flex: 1 1 200px; }
+.applicant-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 0 24px; }
+.selection-note { display: flex; align-items: center; gap: 8px; margin-top: 32px; }
+.selection-note .icon { flex-shrink: 0; }
+
+/* ---------- Evaluate ---------- */
+.evaluate-layout { display: grid; grid-template-columns: minmax(0, 1fr) 340px; align-items: start; gap: 32px; margin-top: 28px; }
+.evaluate-main { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+.evaluate-side { position: sticky; top: 24px; }
+.evaluate-who { display: flex; align-items: flex-start; gap: 16px; margin-top: 8px; }
+.evaluate-facts { flex: 1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 24px; }
+.evaluate-facts dt { font-size: 13px; line-height: 18px; color: var(--color-text-tertiary); }
+.evaluate-facts dd { margin: 2px 0 0; font-size: 15px; font-weight: 600; line-height: 22px; }
+.evaluate-profile { display: inline-flex; align-items: center; gap: 4px; align-self: flex-start; min-height: 44px; font-weight: 600; color: var(--color-text-primary); }
+.factor-list { display: flex; flex-direction: column; gap: 16px; margin-top: 12px; }
+textarea.factor-input { min-height: 76px; }
+.factor-note { font-size: 15px; line-height: 22px; white-space: pre-line; }
+.factor-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 16px; }
+.evaluate-decide .applicant-steps { margin: 4px 0 4px; }
+.evaluate-buttons { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+.evaluate-buttons .btn { flex: 1 1 140px; }
+.evaluate-confirm { display: flex; flex-direction: column; gap: 4px; margin-top: 4px; }
+.evaluate-message { margin-top: 4px; font-size: 14px; }
+
+/* ---------- Tablet (768 to 1099 px) ---------- */
+@media (min-width: 768px) and (max-width: 1099px) {
+  .community-layout,
+  .evaluate-layout { grid-template-columns: minmax(0, 1fr) 280px; gap: 24px; }
+  .club-layout { grid-template-columns: minmax(0, 1fr) 300px; gap: 24px; }
+  .club-main .rail { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .club-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 24px; }
+  .club-members,
+  .club-facts { grid-template-columns: 1fr; }
+  .community-composer-row { grid-template-columns: 1fr; }
+  .evaluate-facts { grid-template-columns: 1fr; }
+  .club-portfolio { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+}
+
+/* ---------- Phone (767 px and down) ---------- */
+@media (max-width: 767px) {
+  .community-filter-note { margin-top: 12px; font-size: 14px; line-height: 20px; }
+  .community-grid { grid-template-columns: 1fr; gap: 16px; margin-top: 16px; }
+  .community-facts { margin-top: 16px; font-size: 14px; }
+  .community-layout,
+  .evaluate-layout { grid-template-columns: 1fr; gap: 24px; margin-top: 20px; }
+  .community-post { padding: 16px; }
+  .community-composer { padding: 16px; }
+  .community-composer-row { grid-template-columns: 1fr; }
+  .community-composer-actions .btn { flex: 1; }
+
+  .community-form { margin-top: 20px; gap: 20px; }
+
+  /* Join requests: the buttons move under the person */
+  .request-list .person-row { flex-wrap: wrap; }
+  .request-actions { flex-basis: 100%; flex-wrap: nowrap; justify-content: stretch; padding: 0 0 8px; }
+  .request-actions .btn { flex: 1 1 0; min-width: 0; height: 44px; padding: 0 8px; }
+
+  .club-facts { grid-template-columns: 1fr; gap: 0; }
+  .club-list-item { padding: 12px 14px; gap: 12px; }
+  .club-list-item .pill { display: none; }
+
+  .club-actions { width: 100%; }
+  .club-actions .btn { flex: 1; height: 44px; }
+  .club-identity { flex-wrap: wrap; }
+  .club-links { grid-template-columns: 1fr; gap: 8px; margin-top: 14px; }
+  .club-link { min-height: 64px; padding: 12px 14px; }
+  .club-recruiting { padding: 16px; }
+  .club-members { grid-template-columns: 1fr; }
+
+  .club-portfolio { grid-template-columns: 1fr; gap: 28px; margin-top: 20px; }
+
+  .applicant-steps-row ol { flex-direction: column; gap: 0; }
+  .applicant-steps-row .applicant-step { position: relative; min-height: 44px; }
+  .applicant-steps-row .applicant-step + .applicant-step::before {
+    position: absolute;
+    left: 13px;
+    top: -8px;
+    width: 2px;
+    height: 16px;
+  }
+
+  .apply-open { margin-top: 20px; }
+  .apply-facts { grid-template-columns: 1fr; }
+  .apply-form .field-input,
+  .community-form .field-input,
+  .community-composer .field-input,
+  .factor-input { font-size: 16px; }
+
+  .selection-progress { padding: 14px 16px; }
+  .applicant-list { grid-template-columns: 1fr; }
+
+  .evaluate-side { position: static; }
+  .evaluate-who { flex-direction: column; gap: 12px; }
+  .evaluate-facts { grid-template-columns: 1fr; width: 100%; }
+  .evaluate-buttons .btn { height: 44px; }
+}

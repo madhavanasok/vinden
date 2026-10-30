@@ -1,0 +1,314 @@
+/* work feature styles. Desktop base, then tablet (768–1099 px), then phone (max-width: 767px). Tokens only. */
+
+/* ---------- Status (components/Status.tsx) ---------- */
+
+.pill-none { background: transparent; border: 1px dashed var(--color-border-default); color: var(--color-text-tertiary); font-weight: 600; }
+
+.status-list {
+  margin-top: 16px;
+  border: 1px solid var(--color-border-default);
+  border-radius: 16px;
+  background: var(--color-bg-surface);
+  overflow: hidden;
+}
+.status-row { display: flex; align-items: center; gap: 14px; padding: 16px 18px; line-height: 20px; }
+.status-row + .status-row { border-top: 1px solid var(--color-border-subtle); }
+.status-row b { font-size: 15px; }
+.status-row-end { flex-shrink: 0; display: flex; align-items: center; }
+.status-passed { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: var(--color-text-trust); white-space: nowrap; }
+.status-list-flat { margin-top: 4px; border: 0; border-radius: 0; background: none; }
+.status-list-flat .status-row { padding: 12px 0; }
+
+.ai-result { display: flex; flex-direction: column; margin-top: 4px; }
+.ai-result li { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; line-height: 20px; }
+.ai-result li + li { border-top: 1px solid var(--color-border-subtle); }
+.ai-result li > .icon { margin-top: 1px; }
+.ai-result b { font-size: 15px; }
+.ai-flag { display: inline-flex; color: var(--color-text-club); }
+
+.feedback-note { margin-top: 16px; padding: 16px 18px; border-radius: 16px; background: var(--color-bg-club); }
+.feedback-note-head { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; color: var(--color-text-club); }
+.feedback-note-body { margin-top: 6px; font-size: 16px; line-height: 24px; color: var(--color-text-primary); }
+
+.notice-club { background: var(--color-bg-club); color: var(--color-text-club); }
+.notice-success { background: var(--color-bg-success); color: var(--color-text-success); }
+.notice .icon { margin-top: 2px; }
+
+/* ---------- Cards and grids ---------- */
+
+.work-grid { margin-bottom: 0; }
+.card-maker a { font-weight: 600; color: var(--color-text-primary); text-decoration: none; }
+.card-maker a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+/* ---------- Home (FN-07-I01) ---------- */
+
+.home-hero { padding-bottom: 32px; }
+.home .section { margin-top: 48px; }
+.signup-prompt {
+  margin-top: 40px;
+  display: flex;
+  align-items: center;
+  gap: 16px 20px;
+  padding: 20px 24px;
+  border-radius: 16px;
+  background: var(--color-bg-highlight);
+}
+.signup-prompt-title { font-family: var(--font-display); font-size: 18px; font-weight: 800; line-height: 24px; letter-spacing: -0.01em; }
+
+/* ---------- Explore (FN-07-I02) ---------- */
+
+.explore-search { margin-top: 28px; max-width: 760px; height: 56px; padding: 0 6px 0 20px; }
+.explore-search input { font-size: 17px; }
+.explore-areas { margin-top: 16px; }
+.chip-count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--color-bg-subtle);
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  font-weight: 700;
+}
+.explore-results { margin-top: 32px; }
+.explore-results-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 16px; }
+.explore-count { font-family: var(--font-display); font-size: 18px; font-weight: 800; line-height: 24px; letter-spacing: -0.01em; }
+.explore-results .rail { margin-top: 20px; }
+
+/* ---------- Post (FN-04-I01) ---------- */
+
+.post-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.select-wrap { position: relative; display: block; }
+.field-select { appearance: none; padding-right: 44px; cursor: pointer; }
+.select-wrap > .icon { position: absolute; top: 50%; right: 14px; transform: translateY(-50%); pointer-events: none; color: var(--color-text-secondary); }
+.teammate.teammate-role-only { grid-template-columns: 220px minmax(0, 1fr) 44px; }
+.upload-zone-sm { padding: 18px; }
+.image-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; margin-top: 4px; }
+.image-thumb { position: relative; aspect-ratio: 4 / 3; overflow: hidden; border: 1px solid var(--color-border-default); border-radius: 12px; background: var(--color-bg-subtle); }
+.image-thumb:first-child { outline: 2px solid var(--color-trust-score); outline-offset: -2px; }
+.image-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.image-remove { position: absolute; top: 4px; right: 4px; box-shadow: var(--shadow-card); }
+.post-side .status-row { gap: 12px; }
+
+/* ---------- Proof of Work page (FN-06-I01) ---------- */
+
+.gallery-one .gallery-main { flex-basis: 100%; height: 400px; }
+a.files-btn { text-decoration: none; }
+.work-facts {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  padding: 16px 20px;
+  border: 1px solid var(--color-border-default);
+  border-radius: 16px;
+  background: var(--color-bg-surface);
+}
+.work-facts dt { font-size: 13px; line-height: 18px; color: var(--color-text-tertiary); }
+.work-facts dd { margin: 2px 0 0; font-size: 15px; line-height: 22px; font-weight: 700; }
+.work-facts a { text-decoration: underline; text-underline-offset: 3px; }
+.work-files { margin-top: 24px; scroll-margin-top: 140px; }
+.work-files-title { margin: 0 0 10px; font-size: 15px; font-weight: 700; }
+.work-page .member > .icon { color: var(--color-text-tertiary); }
+.work-page .notice { margin-top: 0; margin-bottom: 8px; }
+
+.vouch-list { margin-top: 16px; border: 1px solid var(--color-border-default); border-radius: 16px; background: var(--color-bg-surface); }
+.vouch-row { display: flex; align-items: center; gap: 12px; padding: 14px 18px; line-height: 20px; }
+.vouch-row + .vouch-row { border-top: 1px solid var(--color-border-subtle); }
+.vouch-row .vouch-name { font-size: 15px; }
+.vouch-more { margin-top: 10px; }
+.vouch-note { margin-top: 4px; }
+.vouch-done { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 700; color: var(--color-text-trust); }
+.vouch-cta { display: flex; flex-direction: column; gap: 10px; }
+.vouch-confirm { display: flex; flex-direction: column; gap: 8px; padding: 14px; border: 1px solid var(--color-border-default); border-radius: 14px; background: var(--color-bg-subtle); }
+.vouch-confirm-actions { display: flex; gap: 8px; margin-top: 4px; }
+
+/* Phones: floating action above the tab bar (the work page's vouch, the review's Verify). */
+.work-dock { display: block; }
+.work-dock .vouch-confirm { padding: 4px 4px 2px; border: 0; background: none; }
+
+/* ---------- Review queue (FN-05-I02) ---------- */
+
+.section-title .tab-count { margin-left: 6px; vertical-align: 4px; }
+.review-table { margin-top: 20px; border: 1px solid var(--color-border-default); border-radius: 16px; background: var(--color-bg-surface); overflow: hidden; }
+.review-head,
+.review-row {
+  display: grid;
+  grid-template-columns: minmax(0, 2.2fr) minmax(0, 1.4fr) minmax(0, 1.6fr) minmax(0, 1.1fr) 20px;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+}
+.review-head { padding-block: 10px; border-bottom: 1px solid var(--color-border-default); background: var(--color-bg-subtle); font-size: 13px; font-weight: 700; color: var(--color-text-secondary); }
+.review-head::after { content: ''; }
+.review-list li + li { border-top: 1px solid var(--color-border-subtle); }
+.review-row { color: inherit; text-decoration: none; line-height: 20px; }
+.review-row:hover { background: var(--color-bg-subtle); }
+.review-row:hover .review-title { text-decoration: underline; text-underline-offset: 3px; }
+.review-row > .icon { color: var(--color-text-tertiary); }
+.review-cell { min-width: 0; }
+.review-title { font-size: 15px; }
+.review-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.review-people { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.review-people .avatar + .avatar { margin-left: -12px; box-shadow: 0 0 0 2px var(--color-bg-surface); }
+.review-ai { display: inline-flex; align-items: flex-start; gap: 6px; }
+.review-ai > .icon { margin-top: 2px; }
+.review-feedback { margin-top: 4px; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+
+/* ---------- Review a piece of work (FN-05-I03) ---------- */
+
+.review-layout { margin-top: 24px; display: grid; grid-template-columns: minmax(0, 1fr) 380px; align-items: start; gap: 32px; }
+.review-main { display: flex; flex-direction: column; gap: 32px; min-width: 0; }
+.review-card { overflow: hidden; border: 1px solid var(--color-border-default); border-radius: 16px; background: var(--color-bg-surface); }
+.review-card > .cover { height: 220px; border-radius: 0; }
+.review-card-body { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; padding: 20px; }
+.review-card-body .info-row { align-self: stretch; }
+.review-card-body .file-list { align-self: stretch; }
+.review-card-body .work-files-title { margin: 4px 0 0; }
+.review-text { font-size: 16px; line-height: 25px; color: var(--color-text-secondary); }
+.review-section .team-grid { margin-top: 12px; }
+.review-side { display: flex; flex-direction: column; gap: 20px; position: sticky; top: 140px; }
+.review-form { gap: 14px; }
+.review-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.review-actions .btn { flex: 1 1 140px; }
+.review-sent { padding: 12px 14px; border-radius: 12px; background: var(--color-bg-club); }
+.review-sent p { margin-top: 2px; color: var(--color-text-primary); }
+.review-dock {
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: calc(92px + env(safe-area-inset-bottom));
+  z-index: 25;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid var(--color-border-default);
+  border-radius: 20px;
+  background: var(--color-bg-surface);
+  box-shadow: var(--shadow-float);
+}
+
+/* ---------- Completion (FN-05-I04) ---------- */
+
+.completion-totals { margin-top: 24px; font-size: 15px; color: var(--color-text-secondary); }
+.completion-totals b { color: var(--color-text-primary); }
+.completion-scroll {
+  margin-top: 16px;
+  overflow-x: auto;
+  border: 1px solid var(--color-border-default);
+  border-radius: 16px;
+  background: var(--color-bg-surface);
+}
+.completion-table { width: 100%; min-width: 760px; border-collapse: separate; border-spacing: 0; font-size: 14px; line-height: 20px; }
+.completion-table th,
+.completion-table td { padding: 12px 14px; text-align: left; vertical-align: middle; border-bottom: 1px solid var(--color-border-subtle); }
+.completion-table tbody tr:last-child > * { border-bottom: 0; }
+.completion-table thead th { vertical-align: bottom; background: var(--color-bg-subtle); font-weight: 400; }
+.completion-member { position: sticky; left: 0; z-index: 1; min-width: 180px; background: var(--color-bg-surface); border-right: 1px solid var(--color-border-subtle); }
+thead .completion-member { z-index: 2; background: var(--color-bg-subtle); font-weight: 700; font-size: 13px; color: var(--color-text-secondary); }
+.completion-kind { display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-text-tertiary); }
+.completion-item { display: -webkit-box; max-width: 180px; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; font-weight: 700; color: var(--color-text-primary); }
+.completion-person { display: flex; align-items: center; gap: 10px; min-height: 44px; color: inherit; font-weight: 600; text-decoration: none; }
+.completion-person:hover span { text-decoration: underline; text-underline-offset: 3px; }
+.completion-link { display: inline-flex; align-items: center; min-height: 44px; text-decoration: none; }
+.completion-link:hover .pill { text-decoration: underline; text-underline-offset: 3px; }
+
+/* ---------- Tablet (768–1099 px): side panels narrow to 300 px and stay beside the content ---------- */
+
+@media (min-width: 768px) and (max-width: 1099px) {
+  .hero-title { font-size: 44px; line-height: 52px; }
+
+  .work-title { font-size: 32px; line-height: 40px; }
+  .gallery-main { height: 360px; }
+  .gallery-one .gallery-main { height: 340px; }
+  .work-layout { flex-wrap: nowrap; gap: 28px; }
+  .work-main { flex: 1 1 auto; }
+  .work-aside { flex: 0 0 300px; max-width: 300px; }
+  .vouch-panel { padding: 20px; }
+  .work-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+  .post-layout { grid-template-columns: minmax(0, 1fr) 300px; gap: 24px; }
+  .post-step { padding: 24px; }
+  .post-step.is-active { padding: 23px; }
+  .post-side .card-preview { width: 100%; }
+  .post-pair { grid-template-columns: 1fr; }
+  .teammate.teammate-role-only { grid-template-columns: minmax(0, 1fr) 44px; grid-template-areas: 'who remove' 'role role'; }
+  .teammate-role-only .teammate-who { grid-area: who; }
+  .teammate-role-only .teammate-role { grid-area: role; }
+  .teammate-role-only .teammate-remove { grid-area: remove; }
+
+  .review-head,
+  .review-row { grid-template-columns: minmax(0, 2fr) minmax(0, 1.3fr) minmax(0, 1.2fr) 20px; }
+  .review-head span:nth-child(3),
+  .review-row .review-cell:nth-child(3) { display: none; }
+  .review-layout { grid-template-columns: minmax(0, 1fr) 300px; gap: 24px; }
+}
+
+/* ---------- Phone ---------- */
+
+@media (max-width: 767px) {
+  .status-row { gap: 12px; padding: 14px; }
+  .status-row-end .pill { height: 26px; padding: 0 10px; font-size: 12px; }
+  .status-passed { font-size: 12px; }
+
+  .home .section { margin-top: 32px; }
+  .signup-prompt { margin-top: 24px; flex-wrap: wrap; padding: 16px; }
+  .signup-prompt .btn { width: 100%; }
+
+  .explore-search { margin-top: 16px; height: 52px; padding: 0 16px; }
+  .explore-search input { font-size: 16px; }
+  .explore-search-btn { display: none; }
+  .explore-areas {
+    margin: 14px calc(-1 * var(--gutter)) 0;
+    padding: 0 var(--gutter) 2px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .explore-areas .chip { height: 44px; }
+  .explore-results { margin-top: 20px; }
+  .explore-count { font-size: 16px; line-height: 22px; }
+
+  .post-pair { grid-template-columns: 1fr; }
+  .teammate.teammate-role-only { grid-template-columns: minmax(0, 1fr) 44px; grid-template-areas: 'who remove' 'role role'; }
+  .teammate-role-only .teammate-who { grid-area: who; }
+  .teammate-role-only .teammate-role { grid-area: role; }
+  .teammate-role-only .teammate-remove { grid-area: remove; }
+  .teammate .field-input { font-size: 16px; }
+  .field-select { font-size: 16px; }
+  .image-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+  .work-page .notice { margin-top: 12px; }
+  .work-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 14px 16px; }
+  .vouch-row { padding: 12px 14px; }
+  .vouch-row .pill { height: 26px; padding: 0 10px; font-size: 12px; }
+  .work-dock .btn { width: 100%; }
+  .work-dock .vouch-confirm-actions .btn { width: auto; }
+  .work-dock .vouch-done { padding: 8px; }
+
+  .review-head { display: none; }
+  .review-row { grid-template-columns: minmax(0, 1fr) 20px; gap: 8px 12px; padding: 14px 16px; }
+  .review-row .review-cell { grid-column: 1; display: flex; flex-direction: column; gap: 2px; }
+  .review-row > .icon { grid-column: 2; grid-row: 1; }
+  .review-label { position: static; width: auto; height: auto; overflow: visible; clip: auto; font-size: 12px; font-weight: 700; color: var(--color-text-tertiary); }
+
+  .review-layout { grid-template-columns: 1fr; gap: 24px; margin-top: 16px; padding-bottom: 80px; }
+  .review-main { gap: 24px; }
+  .review-card > .cover { height: 160px; }
+  .review-card-body { padding: 16px; }
+  .review-text { font-size: 15px; line-height: 23px; }
+  .review-side { position: static; }
+  .review-dock .btn { width: auto; }
+  .review-dock .btn:first-child { flex: 0 0 auto; }
+
+  .completion-totals { margin-top: 16px; font-size: 14px; }
+  .completion-table { min-width: 640px; }
+  .completion-table th,
+  .completion-table td { padding: 10px 12px; }
+  .completion-table thead th:not(.completion-member) { min-width: 150px; }
+  .completion-item { max-width: 150px; -webkit-line-clamp: 3; }
+  .completion-member { min-width: 128px; }
+}
