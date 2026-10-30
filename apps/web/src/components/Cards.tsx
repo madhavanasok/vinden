@@ -1,8 +1,8 @@
 import { Link } from 'react-router';
-import { rupees, useToggleSave, type Brief, type ClubTask, type WorkCard as WorkCardData } from '../api';
-import { Score } from './Bits';
-import { Cover } from './Cover';
-import { CheckBadge, Icon } from './Icon';
+import { rupees, useJoinCommunity, useToggleSave, type Brief, type ClubTask, type Community, type WorkCard as WorkCardData } from '../api';
+import { Logo, Score } from './Bits';
+import { Cover, filesLabel, type CoverTone, type Format } from './Cover';
+import { CheckBadge, Icon, type IconName } from './Icon';
 import { AvatarStack, ProgressBar } from './Rows';
 
 export function SaveButton({ kind, slug, saved, label }: { kind: 'work' | 'brief'; slug: string; saved: boolean; label: string }) {
@@ -74,12 +74,12 @@ export function TaskCard({ task }: { task: ClubTask }) {
   );
 }
 
-/** A card for work that hasn't been posted yet: no link, no save, no score. */
-export function WorkCardPreview({ title, cover, byline }: { title: string; cover: string; byline: string }) {
+/** A card for work that hasn't been posted yet: no link, no save, no score. Its generated cover is what will be posted. */
+export function WorkCardPreview({ title, format, files, tone, byline }: { title: string; format: Format; files: number; tone: CoverTone; byline: string }) {
   return (
     <article className="card-item card-preview" aria-label="Preview of your card">
       <div className="card-body">
-        <Cover variant={cover} />
+        <Cover title={title} kind={format} meta={files ? filesLabel(files) : undefined} tone={tone} />
         <h3 className="card-title">{title}</h3>
         <p className="small muted">New · no vouches yet</p>
         <p className="card-meta">{byline}</p>
@@ -93,7 +93,7 @@ export function WorkCard({ work, owner = false }: { work: WorkCardData; owner?: 
   return (
     <article className={`card-item${owner ? ' card-item-compact' : ''}`}>
       <Link to={`/work/${work.slug}`} className="card-body">
-        <Cover variant={work.cover} />
+        <Cover variant={work.cover} title={work.title} kind={work.format ?? undefined} meta={filesLabel(work.files)} tone={work.coverTone} seed={work.slug} />
         <h3 className="card-title">{work.title}</h3>
         <Score score={work.score} count={work.vouchCount} size={owner ? 'sm' : undefined} />
         <p className="card-meta">{owner ? work.kindLine : work.byline}</p>
@@ -105,6 +105,56 @@ export function WorkCard({ work, owner = false }: { work: WorkCardData; owner?: 
         )}
       </Link>
       {!owner && <SaveButton kind="work" slug={work.slug} saved={work.saved} label={work.title} />}
+    </article>
+  );
+}
+
+const COMMUNITY_ACTION: Record<Community['status'], { label: string; icon: IconName; quiet: boolean }> = {
+  none: { label: 'Join', icon: 'plus', quiet: false },
+  joined: { label: 'Joined', icon: 'check', quiet: true },
+  requested: { label: 'Requested', icon: 'clock', quiet: true },
+};
+
+/**
+ * An open or closed community: a club's (anyone can follow its news; that isn't club membership) or a topic's.
+ * Joined and Requested are toggles: pressing again leaves or cancels. Figma: Community card.
+ */
+export function CommunityCard({ community: c }: { community: Community }) {
+  const join = useJoinCommunity();
+  const closed = c.access === 'closed';
+  const action = c.status === 'none' && closed ? { label: 'Request to join', icon: 'lock' as const, quiet: false } : COMMUNITY_ACTION[c.status];
+  const on = c.status !== 'none';
+  const tone = (part: string) => `var(--cover-${c.tone}-${part})`;
+  return (
+    <article className="community-card">
+      <div className="community-banner" style={{ background: tone('bg') }} aria-hidden="true">
+        <span style={{ background: tone('soft') }} />
+        <span style={{ background: tone('soft') }} />
+      </div>
+      <span className="community-tile" style={{ color: tone('ink') }} aria-hidden="true">
+        {c.kind === 'club' ? <Logo size={44} /> : <Icon name={(c.icon ?? 'users') as IconName} size={24} />}
+      </span>
+      <div className="community-body">
+        <h3 className="community-name">{c.name}</h3>
+        <p className="community-meta">
+          {closed && <Icon name="lock" size={14} strokeWidth={2} />}
+          {c.kind === 'club' && 'Club community · '}
+          {closed ? 'Closed' : 'Open'} · {c.members.toLocaleString('en-IN')} members
+        </p>
+        <p className="community-desc">{c.description}</p>
+        <button
+          type="button"
+          className={`btn btn-sm btn-block ${action.quiet ? 'btn-quiet' : 'btn-outline'}`}
+          aria-pressed={on}
+          aria-label={`${action.label} ${c.name}`}
+          title={c.status === 'joined' ? 'Leave this community' : c.status === 'requested' ? 'Cancel your request' : undefined}
+          disabled={join.isPending}
+          onClick={() => join.mutate({ slug: c.slug, on: !on })}
+        >
+          <Icon name={action.icon} size={16} strokeWidth={2} />
+          {action.label}
+        </button>
+      </div>
     </article>
   );
 }

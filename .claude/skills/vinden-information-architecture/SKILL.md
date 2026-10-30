@@ -26,6 +26,7 @@ The exception is the single most important action on a page, such as "Vouch for 
 | Post work | `/post` (optionally `?task=` or `?brief=`) | Account holders | Flow 2 form: describe, team and split, skills, review and send |
 | Openings | `/openings` | Students and pros | Roles and internships (not designed yet) |
 | Saved | `/saved` | Everyone signed in | Saved work and briefs |
+| Communities | Home section now; later `/communities` and `/communities/:slug` | Everyone signed in | Follow a club's open community or a topic; request to join closed ones (Flow 9). Following is not club membership |
 | Brief | `/briefs/:slug` (planned) | Club members, company | Scope, fee to club, team, timeline |
 | For companies | marketing site | Company admins | Submit a problem statement (Flow 7) |
 
@@ -44,7 +45,8 @@ Every page has one stable URL that works on every device. Never create phone-onl
 2. Your journey (profile strength, next step, vouch requests).
 3. Your club's task this week.
 4. Live problem statements.
-5. Verified work grid.
+5. Communities: your club's community first, then topics (community cards).
+6. Verified work grid.
 
 Desktop: grids of four. Phone: horizontal rails.
 

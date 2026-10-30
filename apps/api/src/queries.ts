@@ -41,6 +41,9 @@ interface WorkCardRow {
   slug: string;
   card_title: string;
   cover: string;
+  cover_tone: string | null;
+  format: string | null;
+  files: number;
   kind: string;
   category: string;
   ai_checked: string | null;
@@ -56,7 +59,7 @@ interface WorkCardRow {
 
 /** `$1` is the signed-in user's id, for the saved flag. */
 const WORK_CARDS = `
-  SELECT w.id, w.slug, w.card_title, w.cover, w.kind, w.category, w.ai_checked, w.club_reviewed, w.company_signed, cl.college,
+  SELECT w.id, w.slug, w.card_title, w.cover, w.cover_tone, w.format, w.files, w.kind, w.category, w.ai_checked, w.club_reviewed, w.company_signed, cl.college,
     COALESCE(v.total, 0)::float8 AS weight_sum, COALESCE(v.n, 0)::int AS vouch_count,
     (SELECT u.name FROM work_members m JOIN users u ON u.id = m.user_id WHERE m.work_id = w.id ORDER BY m.position LIMIT 1) AS lead_name,
     (SELECT count(*)::int FROM work_members m WHERE m.work_id = w.id) AS team_size,
@@ -71,6 +74,9 @@ function toWorkCard(r: WorkCardRow) {
     slug: r.slug,
     title: r.card_title,
     cover: r.cover,
+    coverTone: r.cover_tone,
+    format: r.format,
+    files: r.files,
     category: r.category,
     score: scoreFrom(r.weight_sum),
     vouchCount: r.vouch_count,
@@ -224,7 +230,9 @@ export async function getClub() {
 /* ---------- Posting work ---------- */
 
 export const WORK_KINDS = { 'club-task': 'Club task', 'paid-brief': 'Paid brief', internship: 'Internship', independent: 'Independent project' } as const;
-const COVER_FOR: Record<string, string> = { Business: 'cac', Design: 'library-phones', Data: 'canteen-bars', Research: 'tam-circles' };
+/** What a generated cover can call the work, and its tones. The web app's Cover.tsx holds the same lists. */
+export const FORMATS = ['Report', 'Deck', 'Dataset', 'Design', 'Research', 'Document', 'Code'] as const;
+export const COVER_TONES = ['blue', 'teal', 'mint', 'gold', 'peach', 'rose', 'lavender', 'stone'] as const;
 
 export interface NewWork {
   title: string;
@@ -234,6 +242,8 @@ export interface NewWork {
   files: { name: string; size: number }[];
   team: { handle: string; role: string; share: number }[];
   skills: string[];
+  format: (typeof FORMATS)[number];
+  coverTone: (typeof COVER_TONES)[number];
 }
 
 /** Flow 2: saves the work as 'in_review'. The AI check and club review would run from here. */
@@ -255,11 +265,11 @@ export async function createWork(input: NewWork): Promise<{ slug: string } | { e
 
   const work = (await one<{ id: number }>(
     `INSERT INTO works (slug, title, card_title, kind, category, subcategory, tags, skills, month, weeks, summary, files, cover,
-       club_id, split_confirmed, position, status, submitted_at)
-     VALUES ($1, $2, $2, $3, $4, $3, $5, $6, $7, 1, $8, $9, $10, $11, $12, $13, 'in_review', now()) RETURNING id`,
+       format, cover_tone, club_id, split_confirmed, position, status, submitted_at)
+     VALUES ($1, $2, $2, $3, $4, $3, $5, $6, $7, 1, $8, $9, '', $10, $11, $12, $13, $14, 'in_review', now()) RETURNING id`,
     [slug, input.title, WORK_KINDS[input.kind], input.category, input.skills.slice(0, 3), input.skills,
       new Date().toLocaleString('en-GB', { month: 'short', year: 'numeric' }),
-      input.description.split(/\n+/).map((p) => p.trim()).filter(Boolean), input.files.length, COVER_FOR[input.category] ?? 'cac',
+      input.description.split(/\n+/).map((p) => p.trim()).filter(Boolean), input.files.length, input.format, input.coverTone,
       inClub ? u.club_id : null, input.team.length === 1, position],
   ))!;
   for (const [i, m] of input.team.entries()) {
@@ -286,6 +296,8 @@ interface WorkRow {
   summary: string[];
   files: number;
   cover: string;
+  cover_tone: string | null;
+  format: string | null;
   ai_checked: string | null;
   club_reviewed: string | null;
   company_signed: string | null;
@@ -338,6 +350,8 @@ export async function getWork(slug: string) {
     summary: w.summary,
     files: w.files,
     cover: w.cover,
+    coverTone: w.cover_tone,
+    format: w.format,
     company: w.company_name ? { name: w.company_name, initial: w.company_initial!, color: w.company_color! } : null,
     club: w.club_name ? { name: w.club_name, college: w.college! } : null,
     status: w.status,
@@ -421,4 +435,56 @@ export async function toggleSave(kind: 'work' | 'brief', slug: string) {
   if (removed.length) return { saved: false };
   await one('INSERT INTO saves (user_id, kind, ref_id) VALUES ($1, $2, $3)', [u.id, kind, ref.id]);
   return { saved: true };
+}
+
+/* ---------- Communities ---------- */
+
+interface CommunityRow {
+  id: number;
+  slug: string;
+  name: string;
+  kind: 'club' | 'topic';
+  access: 'open' | 'closed';
+  members: number;
+  description: string;
+  tone: string;
+  icon: string | null;
+  status: 'joined' | 'requested' | null;
+}
+
+const toCommunity = (c: CommunityRow) => ({
+  slug: c.slug,
+  name: c.name,
+  kind: c.kind,
+  access: c.access,
+  members: c.members,
+  description: c.description,
+  tone: c.tone,
+  icon: c.icon,
+  status: c.status ?? 'none',
+});
+
+const COMMUNITIES = `
+  SELECT c.*, m.status FROM communities c
+  LEFT JOIN community_members m ON m.community_id = c.id AND m.user_id = $1`;
+
+export async function getCommunities() {
+  const u = await currentUser();
+  return (await rows<CommunityRow>(`${COMMUNITIES} ORDER BY c.position`, [u.id])).map(toCommunity);
+}
+
+/** Joining an open community is instant; a closed one records a request for its admins. Leaving cancels either. */
+export async function joinCommunity(slug: string, on: boolean) {
+  const u = await currentUser();
+  const c = await one<CommunityRow>(`${COMMUNITIES} WHERE c.slug = $2`, [u.id, slug]);
+  if (!c) return undefined;
+  if (on && !c.status) {
+    const status = c.access === 'open' ? 'joined' : 'requested';
+    await one('INSERT INTO community_members (community_id, user_id, status) VALUES ($1, $2, $3)', [c.id, u.id, status]);
+    if (status === 'joined') await one('UPDATE communities SET members = members + 1 WHERE id = $1', [c.id]);
+  } else if (!on && c.status) {
+    await one('DELETE FROM community_members WHERE community_id = $1 AND user_id = $2', [c.id, u.id]);
+    if (c.status === 'joined') await one('UPDATE communities SET members = members - 1 WHERE id = $1', [c.id]);
+  }
+  return toCommunity((await one<CommunityRow>(`${COMMUNITIES} WHERE c.id = $2`, [u.id, c.id]))!);
 }

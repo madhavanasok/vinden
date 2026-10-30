@@ -177,5 +177,34 @@ export async function migrate() {
     ALTER TABLE works
       ADD COLUMN IF NOT EXISTS status text NOT NULL DEFAULT 'published',
       ADD COLUMN IF NOT EXISTS submitted_at timestamptz;
+
+    -- Work without a preview image gets a generated cover: its format and title on a tone. An empty cover means
+    -- generated; cover_tone fixes the tone a poster saw in the preview (else the slug picks one).
+    ALTER TABLE works
+      ADD COLUMN IF NOT EXISTS format text,
+      ADD COLUMN IF NOT EXISTS cover_tone text;
+
+    -- Communities. Open ones anyone can join; closed ones need an admin's approval. Every Vinden Club has an open
+    -- community for its announcements and events: following it is not club membership.
+    CREATE TABLE IF NOT EXISTS communities (
+      id serial PRIMARY KEY,
+      slug text UNIQUE NOT NULL,
+      name text NOT NULL,
+      kind text NOT NULL CHECK (kind IN ('club', 'topic')),
+      access text NOT NULL CHECK (access IN ('open', 'closed')),
+      members int NOT NULL,
+      description text NOT NULL,
+      tone text NOT NULL,
+      icon text,
+      club_id int REFERENCES clubs (id),
+      position int NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS community_members (
+      community_id int NOT NULL REFERENCES communities (id),
+      user_id int NOT NULL REFERENCES users (id),
+      status text NOT NULL CHECK (status IN ('joined', 'requested')),
+      PRIMARY KEY (community_id, user_id)
+    );
   `);
 }

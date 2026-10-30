@@ -1,7 +1,7 @@
 import { Link, useSearchParams } from 'react-router';
-import { useHome, type Home as HomeData } from '../api';
+import { useCommunities, useHome, type Home as HomeData } from '../api';
 import { Avatar, Logo } from '../components/Bits';
-import { BriefCard, WorkCard } from '../components/Cards';
+import { BriefCard, CommunityCard, WorkCard } from '../components/Cards';
 import { Icon, type IconName } from '../components/Icon';
 import { MobileBar } from '../components/Layout';
 import { ErrorState, Loading } from './Placeholder';
@@ -15,6 +15,7 @@ const VIEWS: { key: string | null; label: string; icon?: IconName }[] = [
 
 export function Home() {
   const home = useHome();
+  const communities = useCommunities();
   const [params, setParams] = useSearchParams();
   const q = params.get('q') ?? '';
   const view = params.get('view');
@@ -105,6 +106,20 @@ export function Home() {
             ) : (
               <p className="empty">No problem statements match.</p>
             )}
+          </section>
+        )}
+
+        {!filtering && communities.data && communities.data.length > 0 && (
+          <section className="section" aria-labelledby="communities-title">
+            <div className="section-head">
+              <div>
+                <h2 id="communities-title" className="section-title">Communities</h2>
+                <p className="section-sub">Follow clubs and topics for events and updates</p>
+              </div>
+            </div>
+            <div className="rail">
+              {communities.data.slice(0, 4).map((c) => <CommunityCard key={c.slug} community={c} />)}
+            </div>
           </section>
         )}
 

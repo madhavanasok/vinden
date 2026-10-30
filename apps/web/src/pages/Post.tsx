@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
 import { useClub, useMe, usePostWork, type Club, type Me, type Person, type WorkKind } from '../api';
 import { WorkCardPreview } from '../components/Cards';
+import { formatFor, toneFor, type CoverTone } from '../components/Cover';
 import { Checkbox, OptionCards, Steps, TeammateRow, TextField, UploadField, type Option, type PickedFile } from '../components/Forms';
 import { Icon } from '../components/Icon';
 import { ActionBar, PageBar } from '../components/Layout';
@@ -18,7 +19,6 @@ const KINDS: Option<WorkKind>[] = [
 ];
 
 const CATEGORIES = ['Business', 'Design', 'Data', 'Research'];
-const COVER_FOR: Record<string, string> = { Business: 'cac', Design: 'library-phones', Data: 'canteen-bars', Research: 'tam-circles' };
 const SPLIT = ['var(--color-split-1)', 'var(--color-split-2)', 'var(--color-split-3)', 'var(--color-split-4)'];
 const DRAFT_KEY = 'vinden.post-draft';
 
@@ -37,6 +37,8 @@ interface Draft {
   team: Mate[];
   category: string | null;
   skills: string[];
+  /** Picked once per draft, so the preview's cover colour doesn't change as you type, and posting keeps it. */
+  coverTone: CoverTone;
 }
 
 function loadDraft(): Partial<Draft> {
@@ -73,6 +75,7 @@ function PostForm({ me, club }: { me: Me; club: Club | null }) {
   const [category, setCategory] = useState<string | null>(saved.category ?? null);
   const [skills, setSkills] = useState<string[]>(saved.skills ?? []);
   const [skillDraft, setSkillDraft] = useState('');
+  const [coverTone] = useState<CoverTone>(() => saved.coverTone ?? toneFor(`${me.handle}-${Date.now()}`));
   const [confirmed, setConfirmed] = useState(false);
   const [checked, setChecked] = useState([false, false, false, false]);
   const post = usePostWork();
@@ -82,11 +85,11 @@ function PostForm({ me, club }: { me: Me; club: Club | null }) {
 
   useEffect(() => {
     try {
-      localStorage.setItem(DRAFT_KEY, JSON.stringify({ title, kind, description, files, team, category, skills } satisfies Draft));
+      localStorage.setItem(DRAFT_KEY, JSON.stringify({ title, kind, description, files, team, category, skills, coverTone } satisfies Draft));
     } catch {
       // Private browsing or storage turned off: the form still works, it just won't remember the draft.
     }
-  }, [title, kind, description, files, team, category, skills]);
+  }, [title, kind, description, files, team, category, skills, coverTone]);
 
   const total = team.reduce((sum, m) => sum + (Number(m.share) || 0), 0);
   const errors: Record<string, string | undefined>[] = [
@@ -143,6 +146,8 @@ function PostForm({ me, club }: { me: Me; club: Club | null }) {
         files: files.map((f) => ({ name: f.name, size: f.size })),
         team: team.map((m) => ({ handle: m.person.handle, role: m.role.trim(), share: Number(m.share) })),
         skills,
+        format,
+        coverTone,
       },
       {
         onSuccess: ({ slug }) => {
@@ -166,6 +171,7 @@ function PostForm({ me, club }: { me: Me; club: Club | null }) {
     setSkillDraft('');
   };
 
+  const format = formatFor(files.map((f) => f.name), category);
   const others = team.length - 1;
   const byline = `${me.name}${others > 0 ? ` + ${others}` : ''}${club ? ` · ${club.college}` : ''}`;
   const clubWork = kind === 'club-task' || kind === 'paid-brief';
@@ -298,7 +304,7 @@ function PostForm({ me, club }: { me: Me; club: Club | null }) {
             <h2 id="post-s3" className="post-step-title mobile-only">Review and send</h2>
             <div className="side-card post-preview">
               <p className="small soft">How your card will look</p>
-              <WorkCardPreview title={title.trim() || 'Your title'} cover={COVER_FOR[category ?? ''] ?? 'cac'} byline={byline} />
+              <WorkCardPreview title={title.trim() || 'Your title'} format={format} files={files.length} tone={coverTone} byline={byline} />
             </div>
             <div className="side-card">
               <h3 className="side-card-title">What happens next</h3>

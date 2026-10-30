@@ -67,7 +67,9 @@ interface WorkSeed {
   weeks: number;
   summary: string[];
   files: number;
+  /** A drawing in the web app's Cover.tsx, or '' for a generated cover named after `format`. */
   cover: string;
+  format?: string;
   company?: string;
   inClub?: boolean;
   checks: { ai?: string; club?: string; company?: string };
@@ -126,7 +128,7 @@ const WORKS: WorkSeed[] = [
   {
     slug: 'cafe-pricing', title: 'Campus café pricing study',
     kind: 'Club task', category: 'Business', subcategory: 'Pricing', tags: ['Pricing', 'Market research'],
-    skills: ['Survey design', 'Pricing'], month: 'Aug 2025', weeks: 2, files: 2, cover: 'cafe-prices', inClub: true,
+    skills: ['Survey design', 'Pricing'], month: 'Aug 2025', weeks: 2, files: 2, cover: '', format: 'Report', inClub: true,
     summary: ["Ananya's first proof of work: a price-sensitivity survey of 180 students that helped the campus café set a three-tier menu."],
     checks: { ai: '22 Aug', club: '25 Aug' },
     members: [['ananya', 'Survey, analysis and recommendation', 100]],
@@ -154,7 +156,7 @@ const WORKS: WorkSeed[] = [
   {
     slug: 'laundry-deck', title: 'Pitch deck for a campus laundry startup',
     kind: 'Independent project', category: 'Business', subcategory: 'Entrepreneurship', tags: ['Entrepreneurship'],
-    skills: ['Pitching', 'Financial modelling'], month: 'Apr 2026', weeks: 2, files: 2, cover: 'laundry-deck',
+    skills: ['Pitching', 'Financial modelling'], month: 'Apr 2026', weeks: 2, files: 2, cover: '', format: 'Deck',
     summary: ['A pitch deck and simple unit-economics model for a student-run laundry pickup service, built for a college pitch competition.'],
     checks: { ai: '12 Apr' },
     members: [['ananya', 'Deck and model', 100]],
@@ -236,11 +238,11 @@ export async function seed() {
 
   for (const [i, w] of WORKS.entries()) {
     const workId = await insert(
-      `INSERT INTO works (slug, title, card_title, kind, category, subcategory, tags, skills, month, weeks, summary, files, cover,
+      `INSERT INTO works (slug, title, card_title, kind, category, subcategory, tags, skills, month, weeks, summary, files, cover, format,
          company_id, club_id, ai_checked, club_reviewed, company_signed, split_confirmed, position)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20)`,
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21)`,
       [w.slug, w.title, w.cardTitle ?? w.title, w.kind, w.category, w.subcategory, w.tags, w.skills, w.month, w.weeks, w.summary, w.files,
-        w.cover, w.company ? companies.get(w.company) : null, w.inClub ? clubId : null, w.checks.ai ?? null, w.checks.club ?? null,
+        w.cover, w.format ?? null, w.company ? companies.get(w.company) : null, w.inClub ? clubId : null, w.checks.ai ?? null, w.checks.club ?? null,
         w.checks.company ?? null, w.members.length > 1, i],
     );
     for (const [pos, [handle, role, share]] of w.members.entries()) {
@@ -297,5 +299,55 @@ export async function seed() {
   ]);
   for (const from of ['meera', 'kabir']) {
     await one('INSERT INTO vouch_requests (from_user, to_user) VALUES ($1, $2)', [userId(from), userId(ME)]);
+  }
+}
+
+/**
+ * Generated covers. Runs on every start: the two seeded works without a preview image lose their drawings in
+ * databases seeded before generated covers existed, and posted work (which has no preview yet) uses one too.
+ */
+export async function seedCovers() {
+  await one("UPDATE works SET cover = '', format = 'Report' WHERE slug = 'cafe-pricing' AND cover <> ''");
+  await one("UPDATE works SET cover = '', format = 'Deck' WHERE slug = 'laundry-deck' AND cover <> ''");
+  await one("UPDATE works SET cover = '' WHERE submitted_at IS NOT NULL AND cover <> ''");
+}
+
+const COMMUNITIES = [
+  {
+    slug: 'meridian', name: 'Vinden Club Meridian', kind: 'club', access: 'open', members: 412, tone: 'lavender', icon: null,
+    description: 'Sessions, events and recruitment news from the club. Anyone at Meridian can follow along.',
+  },
+  {
+    slug: 'product-growth', name: 'Product & Growth', kind: 'topic', access: 'open', members: 1240, tone: 'teal', icon: 'trendingUp',
+    description: 'Teardowns, growth experiments and product case studies from students and operators.',
+  },
+  {
+    slug: 'design-circle', name: 'Design Circle', kind: 'topic', access: 'open', members: 860, tone: 'rose', icon: 'sparkle',
+    description: 'Portfolio reviews, critiques and UX research methods. Post a draft, get feedback.',
+  },
+  {
+    slug: 'ai-builders-pune', name: 'AI Builders Pune', kind: 'topic', access: 'closed', members: 86, tone: 'blue', icon: 'sliders',
+    description: 'Students shipping AI projects in Pune. Admins approve new members to keep it small.',
+  },
+] as const;
+
+/**
+ * Communities for Home. Runs on every start: adds missing ones and keeps names, copy and tones in step with this list,
+ * but never touches member counts or who has joined. The demo user follows their club's community.
+ */
+export async function seedCommunities() {
+  const club = await one<{ id: number }>("SELECT id FROM clubs WHERE slug = 'meridian'");
+  for (const [position, c] of COMMUNITIES.entries()) {
+    const { id, inserted } = (await one<{ id: number; inserted: boolean }>(
+      `INSERT INTO communities (slug, name, kind, access, members, description, tone, icon, club_id, position)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+       ON CONFLICT (slug) DO UPDATE SET name = EXCLUDED.name, description = EXCLUDED.description, tone = EXCLUDED.tone,
+         icon = EXCLUDED.icon, position = EXCLUDED.position
+       RETURNING id, (xmax = 0) AS inserted`,
+      [c.slug, c.name, c.kind, c.access, c.members, c.description, c.tone, c.icon, c.kind === 'club' ? club?.id ?? null : null, position],
+    ))!;
+    if (inserted && c.kind === 'club') {
+      await one("INSERT INTO community_members (community_id, user_id, status) SELECT $1, id, 'joined' FROM users WHERE handle = $2", [id, ME]);
+    }
   }
 }

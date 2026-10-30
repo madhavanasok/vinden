@@ -25,6 +25,7 @@ File Vinden-Design (`zFjDhV7CDaLDVZpqN3dBzU`).
 - Never hide the checks line to save space.
 - The whole card links to the work. Save is a separate Floating icon button.
 - On a profile, the byline becomes the kind of work.
+- Work without a preview image gets a Generated cover (kind, file type and title on a tone from the work); see vinden-component-cover. Neighbouring cards never share a tone, and never Navy. In Figma the default cover is Blue; override the tone per card.
 
 ## In code
 

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router';
 import { ApiError, timeAgo, useMe, useToggleSave, useVouch, useWork, type Me, type Work } from '../api';
 import { Avatar, Dots, Logo } from '../components/Bits';
-import { Cover } from '../components/Cover';
+import { Cover, filesLabel } from '../components/Cover';
 import { CheckBadge, Icon, type IconName } from '../components/Icon';
 import { CheckRow, type CheckStatus } from '../components/Rows';
 import { ErrorState, Loading, NotFound } from './Placeholder';
@@ -93,7 +93,16 @@ function WorkView({ w, me }: { w: Work; me: Me }) {
 
           <div className="gallery">
             <div className="gallery-main">
-              <Cover variant={w.cover === 'cac' ? 'cac-report' : w.cover} className="cover-fill" />
+              <Cover
+                variant={w.cover === 'cac' ? 'cac-report' : w.cover}
+                className="cover-fill"
+                large
+                title={w.title}
+                kind={w.format ?? undefined}
+                meta={filesLabel(w.files)}
+                tone={w.coverTone}
+                seed={w.slug}
+              />
               <Link to="/" className="hero-btn hero-back mobile-only" aria-label="Back to Explore">
                 <Icon name="chevronLeft" size={22} strokeWidth={2} />
               </Link>

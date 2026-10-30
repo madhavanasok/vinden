@@ -1,14 +1,19 @@
 /** The Vinden demo API: routes and start-up (migrate, then seed an empty database). server.ts listens locally. */
 import Fastify from 'fastify';
 import { migrate } from './schema.js';
-import { seed, seedClub } from './seed.js';
-import { createWork, getClub, getHome, getMe, getPerson, getWork, toggleSave, vouch, WORK_KINDS, type NewWork } from './queries.js';
+import { seed, seedClub, seedCommunities, seedCovers } from './seed.js';
+import {
+  COVER_TONES, createWork, FORMATS, getClub, getCommunities, getHome, getMe, getPerson, getWork, joinCommunity, toggleSave, vouch, WORK_KINDS,
+  type NewWork,
+} from './queries.js';
 
 export const app = Fastify({ logger: { level: process.env.LOG_LEVEL ?? 'warn' } });
 
 await migrate();
 await seed();
 await seedClub();
+await seedCovers();
+await seedCommunities();
 
 app.get('/api/health', async () => ({ ok: true }));
 
@@ -39,7 +44,7 @@ app.post<{ Body: NewWork }>(
     schema: {
       body: {
         type: 'object',
-        required: ['title', 'kind', 'category', 'description', 'files', 'team', 'skills'],
+        required: ['title', 'kind', 'category', 'description', 'files', 'team', 'skills', 'format', 'coverTone'],
         properties: {
           title: { type: 'string', minLength: 4, maxLength: 120 },
           kind: { enum: Object.keys(WORK_KINDS) },
@@ -57,6 +62,8 @@ app.post<{ Body: NewWork }>(
             },
           },
           skills: { type: 'array', minItems: 1, maxItems: 8, items: { type: 'string', minLength: 2, maxLength: 40 } },
+          format: { enum: [...FORMATS] },
+          coverTone: { enum: [...COVER_TONES] },
         },
       },
     },
@@ -88,3 +95,15 @@ app.post<{ Body: { kind: 'work' | 'brief'; slug: string } }>(
     return result ?? reply.code(404).send({ error: 'Nothing to save at that link.' });
   },
 );
+
+app.get('/api/communities', async () => getCommunities());
+
+app.post<{ Params: { slug: string } }>('/api/communities/:slug/join', async (req, reply) => {
+  const community = await joinCommunity(req.params.slug, true);
+  return community ?? reply.code(404).send({ error: 'No community at that link.' });
+});
+
+app.delete<{ Params: { slug: string } }>('/api/communities/:slug/join', async (req, reply) => {
+  const community = await joinCommunity(req.params.slug, false);
+  return community ?? reply.code(404).send({ error: 'No community at that link.' });
+});

@@ -48,6 +48,11 @@ Navy and cream carry every screen. Each other colour has one meaning:
 | Feedback | success green/700 on green/50 · error red/700 on red/50 | System messages only |
 | Inverse | bg/inverse navy/900 · text/inverse white · text/inverse-muted navy/200 | Navy bands, footer, editorial |
 
+- **Cover tones (a third, separate set):** eight light tones for covers and community banners: Blue, Teal, Mint, Gold, Peach, Rose, Lavender and Stone. Navy is for editorial banners only.
+  - Each tone has bg, mark, soft and ink values (the Figma **Cover** collection, CSS `--cover-<tone>-*`).
+  - They are pictures, not UI, so they never carry meaning and never change with the theme.
+  - Spread them so neighbouring cards differ.
+  - See vinden-component-cover for the values.
 - **Text contrast:** only navy and the 700 steps are text colours on light backgrounds; all of them pass WCAG AA. Orange, gold and lavender at brand strength are fills, never text on cream. On navy, everything passes except Horizon Blue.
 - **Gradients** appear only in the logo, the profile ring and one editorial banner.
 
@@ -61,7 +66,8 @@ Every Color token has a Light and a Dark value: two modes in the Figma Color col
   - Each tint becomes a deep version of its hue (blue/900, lavender/900, gold/900, orange/900, green/900, red/900), with the 200/300 step for its text.
   - Orange stays the one key action; trust blue and focus move to blue/400.
 - **What stays the same:**
-  - Covers, because they are pictures of the work. Pinned to Light in Figma; fixed colours in `Cover.tsx`.
+  - Covers and community banners, because they are pictures of the work. They use the single-mode Cover collection in Figma and `--cover-*` tokens, which the dark block doesn't redefine, in code.
+  - The community card's identity tile stays white.
   - The logo, the sunrise gradients, the editorial band (which gets a 1 px edge in dark) and white controls that float over covers.
 - **Contrast:** all dark text pairs pass AA. The lowest is error text on its tint at 6.1:1. Input borders and the focus ring are 4.5:1.
 - **Choosing the theme:**
@@ -128,7 +134,10 @@ Always apply a text style. Never set size or weight by hand.
 ## Icons, covers, logo
 
 - **Icons:** 32 line icons on a 24 px grid, 1.8 px stroke, round caps (`apps/web/src/components/Icon.tsx`, Figma Icons page). Use 20 px in text rows and 22 px in navigation. Icons sit beside a label; icon-only buttons need an `aria-label`.
-- **Covers:** show the work itself (a chart, screens, a slide). The demo draws them in `components/Cover.tsx`. Cover tone hints at the kind of work, not its quality.
+- **Covers:** show the work itself (a chart, screens, a slide). The demo draws them in `components/Cover.tsx`.
+  - Work without images gets a Generated cover: kind, file type and title on a tone picked from the work.
+  - Tone never says anything about quality.
+  - No navy covers on work.
 - **Logo:** the Sunrise tile (24 px minimum) plus the lowercase "vinden" wordmark. Use the components Logo / Tile, Logo / Lockup and Logo / Lockup on dark, never a rebuild.
 
 ## Voice and tone

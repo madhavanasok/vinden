@@ -32,10 +32,11 @@ Claude Code loads these automatically when a task matches. People can read them 
 - `vinden-atom-text-field`
 - `vinden-atom-vouch-score`
 
-## Components (18)
+## Components (19)
 
 - `vinden-component-action-bar`
 - `vinden-component-brief-card`
+- `vinden-component-community-card`
 - `vinden-component-contribution-split`
 - `vinden-component-cover`
 - `vinden-component-info-row`

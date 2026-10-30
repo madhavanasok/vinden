@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import type { CoverTone, Format } from './components/Cover';
 
 export type Tone = 'blue' | 'orange' | 'lav' | 'gold';
 
@@ -33,10 +34,17 @@ export interface Brief {
   saved: boolean;
 }
 
-export interface WorkCard {
+/** `cover` names a drawing; '' means a generated cover from the format, title and tone (null: picked from the slug). */
+interface CoverFields {
+  cover: string;
+  coverTone: CoverTone | null;
+  format: Format | null;
+  files: number;
+}
+
+export interface WorkCard extends CoverFields {
   slug: string;
   title: string;
-  cover: string;
   category: string;
   score: number;
   vouchCount: number;
@@ -66,7 +74,7 @@ export interface Vouch {
   createdAt: string;
 }
 
-export interface Work {
+export interface Work extends CoverFields {
   slug: string;
   title: string;
   cardTitle: string;
@@ -78,8 +86,6 @@ export interface Work {
   month: string;
   weeks: number;
   summary: string[];
-  files: number;
-  cover: string;
   company: Company | null;
   club: { name: string; college: string } | null;
   /** 'in_review' until the checks have run. */
@@ -134,6 +140,21 @@ export interface NewWork {
   files: { name: string; size: number }[];
   team: { handle: string; role: string; share: number }[];
   skills: string[];
+  format: Format;
+  coverTone: CoverTone;
+}
+
+/** Open communities anyone can join; closed ones take a request. A club's community is not club membership. */
+export interface Community {
+  slug: string;
+  name: string;
+  kind: 'club' | 'topic';
+  access: 'open' | 'closed';
+  members: number;
+  description: string;
+  tone: CoverTone;
+  icon: string | null;
+  status: 'none' | 'joined' | 'requested';
 }
 
 export interface Profile extends Person {
@@ -202,6 +223,17 @@ export function useVouch(slug: string) {
       void qc.invalidateQueries({ queryKey: ['home'] });
       void qc.invalidateQueries({ queryKey: ['profile'] });
     },
+  });
+}
+
+export const useCommunities = () => useQuery({ queryKey: ['communities'], queryFn: () => request<Community[]>('/api/communities') });
+
+/** Join (or request to join) when `on`; leave or cancel the request otherwise. */
+export function useJoinCommunity() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ slug, on }: { slug: string; on: boolean }) => request<Community>(`/api/communities/${slug}/join`, { method: on ? 'POST' : 'DELETE' }),
+    onSuccess: (community) => qc.setQueryData<Community[]>(['communities'], (list) => list?.map((c) => (c.slug === community.slug ? community : c))),
   });
 }
 

@@ -80,6 +80,45 @@
   --color-action-secondary: #fff;
   color-scheme: light;
 
+  /* Cover tones (Figma: the Cover variables). A cover is a picture of the work, so these stay the same in the dark
+     theme and are not redefined below. Ink passes 4.5:1 on its bg. Navy is for editorial use, never a work cover. */
+  --cover-blue-bg: #dce8fb;
+  --cover-blue-mark: #1565d8;
+  --cover-blue-soft: #adc9f4;
+  --cover-blue-ink: #0f4fae;
+  --cover-teal-bg: #d3efeb;
+  --cover-teal-mark: #13877b;
+  --cover-teal-soft: #9fd8d0;
+  --cover-teal-ink: #0b5e56;
+  --cover-mint-bg: #ddf2e4;
+  --cover-mint-mark: #23884f;
+  --cover-mint-soft: #a8ddbc;
+  --cover-mint-ink: #1d7a4f;
+  --cover-gold-bg: #fff3cc;
+  --cover-gold-mark: #a67f00;
+  --cover-gold-soft: #ffd23f;
+  --cover-gold-ink: #7a5b00;
+  --cover-peach-bg: #fde3c8;
+  --cover-peach-mark: #cf6209;
+  --cover-peach-soft: #fbc793;
+  --cover-peach-ink: #a84b06;
+  --cover-rose-bg: #fbe1e7;
+  --cover-rose-mark: #d9466e;
+  --cover-rose-soft: #f4afc0;
+  --cover-rose-ink: #9c2747;
+  --cover-lavender-bg: #efeafd;
+  --cover-lavender-mark: #7b63d0;
+  --cover-lavender-soft: #cfc2f7;
+  --cover-lavender-ink: #5b43ae;
+  --cover-stone-bg: #ece7dc;
+  --cover-stone-mark: #3d4a63;
+  --cover-stone-soft: #ddd8cc;
+  --cover-stone-ink: #07142f;
+  --cover-navy-bg: #0e1f45;
+  --cover-navy-mark: #f9963a;
+  --cover-navy-soft: #ffd23f;
+  --cover-navy-ink: #fff;
+
   --font-display: 'Plus Jakarta Sans Variable', system-ui, sans-serif;
   --font-body: 'DM Sans Variable', system-ui, sans-serif;
   --font-serif: 'Instrument Serif', Georgia, serif;
@@ -345,6 +384,9 @@ img {
 .btn-outline { background: var(--color-action-secondary); border-color: var(--color-action-primary); color: var(--color-text-primary); }
 .btn-outline:hover:not(:disabled) { background: var(--color-bg-selected); }
 .btn-white { background: #fff; color: var(--navy); }
+/* Quiet: a settled state such as Joined or Requested. Figma: Button, Style=Quiet. */
+.btn-quiet { background: var(--color-bg-selected); color: var(--color-text-primary); }
+.btn-quiet:hover:not(:disabled) { background: color-mix(in srgb, var(--color-bg-selected), var(--color-text-primary) 8%); }
 
 .button-row {
   display: flex;
@@ -941,8 +983,141 @@ a.card-body:hover .card-title { text-decoration: underline; text-underline-offse
   color: var(--navy);
 }
 
+/* Community card: a club's community (open to anyone, not club membership) or a topic's. Figma: Community card.
+   The banner is a cover tone, so it stays light in the dark theme; the tile stays white for the same reason. */
+.community-card {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--color-border-default);
+  border-radius: 16px;
+  background: var(--color-bg-surface);
+}
+.community-banner { position: relative; height: 64px; overflow: hidden; }
+.community-banner span { position: absolute; border-radius: 999px; }
+.community-banner span:first-child { top: -16px; right: -8px; width: 56px; height: 56px; }
+.community-banner span:last-child { top: 30px; right: 54px; width: 28px; height: 28px; }
+.community-tile {
+  position: absolute;
+  top: 40px;
+  left: 16px;
+  width: 48px;
+  height: 48px;
+  box-sizing: border-box;
+  overflow: hidden;
+  border-radius: 12px;
+  border: 2px solid var(--color-bg-surface);
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.community-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 32px 16px 16px;
+}
+.community-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 17px;
+  line-height: 23px;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.community-meta {
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--color-text-tertiary);
+}
+.community-desc {
+  margin: 8px 0 16px;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--color-text-secondary);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+.community-body .btn { margin-top: auto; }
+
+/* Generated cover: work posted without a preview image. Figma: Cover / Generated. Colours come from the tone inline. */
+.cover-gen { container-type: size; }
+.cover-gen-circle {
+  position: absolute;
+  top: -48px;
+  right: -36px;
+  width: 140px;
+  height: 140px;
+  border-radius: 999px;
+}
+.cover-gen-body {
+  position: absolute;
+  inset: 0;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.cover-gen-tile {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cover-gen-overline {
+  margin-top: 12px;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.cover-gen-title {
+  margin-top: 4px;
+  max-width: 80%;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: -0.01em;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+.cover-lg .cover-gen-circle { top: -90px; right: -60px; width: 280px; height: 280px; }
+.cover-lg .cover-gen-body { padding: 20px; }
+.cover-lg .cover-gen-title { max-width: min(80%, 560px); font-size: 28px; line-height: 34px; }
+/* Shorter covers (phone cards, the Club grid) show two lines of title, and the shortest drop the tile too. */
+.cover-gen-body > * { flex-shrink: 0; }
+@container (max-height: 169px) {
+  .cover-gen-title { -webkit-line-clamp: 2; }
+}
+@container (max-height: 139px) {
+  .cover-gen-tile { display: none; }
+  .cover-gen-overline { margin-top: 0; }
+  .cover-gen-title { font-size: 16px; line-height: 21px; }
+  .cover-gen-circle { top: -32px; right: -28px; width: 80px; height: 80px; }
+}
+
 @media (max-width: 767px) {
   .cover { height: 160px; }
+  .cover-lg .cover-gen-title { font-size: 22px; line-height: 28px; }
   .card-title { font-size: 16px; line-height: 21px; margin-top: 10px; }
 }
 
@@ -1482,7 +1657,8 @@ a.card-body:hover .card-title { text-decoration: underline; text-underline-offse
   .gallery { order: -1; margin: 0 calc(-1 * var(--gutter)); border-radius: 0; }
   .gallery-main { flex-basis: 100%; height: 320px; }
   .gallery-side { display: none; }
-  .files-btn { background: rgba(255, 255, 255, 0.18); }
+  /* The phone hero has Back and Share over its top edge, so a generated cover starts below them. */
+  .gallery-main .cover-lg .cover-gen-body { padding-top: 76px; }
   .provenance { margin-top: 16px; padding: 12px 14px; }
   .work-title { flex-basis: 100%; font-size: 26px; line-height: 32px; letter-spacing: -0.025em; }
   .title-row { margin-top: 18px; }
