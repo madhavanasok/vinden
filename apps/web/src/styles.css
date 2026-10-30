@@ -2320,3 +2320,192 @@ a.person-row:hover b { text-decoration: underline; text-underline-offset: 3px; }
   .post-side { position: static; display: flex; flex-direction: column; gap: 16px; }
   .post-side .verify-card { padding: 12px; }
 }
+
+/* ---------- Register build foundation: breakpoints, demo bar, page frame, board, empty state (vinden-design) ---------- */
+
+/*
+ * Three layouts. Desktop is the base (1100 px and up). Tablet overrides go in
+ * @media (min-width: 768px) and (max-width: 1099px); phone overrides in @media (max-width: 767px).
+ * Feature styles live in features/<name>/<name>.css and follow the same order.
+ */
+
+/* Demo only: who the demo is acting as. Dashed and tinted so it never reads as product UI. */
+.demo-bar { background: var(--color-bg-subtle); border-bottom: 1px dashed var(--color-border-strong); }
+.demo-row { display: flex; align-items: center; gap: 10px; min-height: 40px; }
+.demo-label { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--color-text-secondary); white-space: nowrap; }
+.demo-tag {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--color-bg-highlight);
+  color: var(--color-text-highlight);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.demo-select {
+  flex: 0 1 400px;
+  min-width: 0;
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--color-border-default);
+  border-radius: 8px;
+  background: var(--color-bg-surface);
+  color: var(--color-text-primary);
+  font: inherit;
+  font-size: 14px;
+}
+
+/* Page frame (components/Page.tsx). */
+.page { padding-top: 40px; padding-bottom: 72px; }
+.page-narrow { max-width: calc(720px + 2 * var(--gutter)); }
+.page-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px 24px; }
+.page-head-text { flex: 1 1 420px; min-width: 0; }
+.page-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 40px;
+  line-height: 48px;
+  letter-spacing: -0.02em;
+}
+.page-head .eyebrow { margin-bottom: 6px; }
+.page-sub { margin-top: 8px; max-width: 680px; font-size: 17px; line-height: 27px; color: var(--color-text-secondary); }
+.page-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.page-section { margin-top: 48px; }
+.page-section > .section-head + * { margin-top: 20px; }
+
+/* Tabs that filter a page: page-tabs styling for buttons. */
+.tab-row { margin-top: 28px; }
+.page-tabs button {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 48px;
+  margin-bottom: -1px;
+  padding: 0;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: none;
+  font: inherit;
+  font-size: 15px;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+.page-tabs button:hover { color: var(--color-text-primary); }
+.page-tabs button.active { border-color: var(--color-action-primary); font-weight: 700; color: var(--color-text-primary); }
+.tab-count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 7px;
+  border-radius: 999px;
+  background: var(--color-bg-subtle);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-text-secondary);
+}
+
+/* Empty state. */
+.empty-state {
+  margin-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  border: 1px dashed var(--color-border-default);
+  border-radius: 16px;
+  background: var(--color-bg-surface);
+}
+.empty-state > div { flex: 1 1 240px; }
+.empty-state-title { font-size: 16px; font-weight: 700; }
+
+/* Board: columns for fixed steps (selection, problem statements). */
+.board {
+  margin-top: 24px;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(220px, 1fr);
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  scroll-snap-type: x proximity;
+}
+.board-col {
+  min-height: 180px;
+  padding: 12px;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 16px;
+  background: var(--color-bg-subtle);
+  scroll-snap-align: start;
+}
+.board-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0 2px 10px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+.board-count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: var(--color-bg-surface);
+  font-size: 13px;
+  letter-spacing: 0;
+  color: var(--color-text-primary);
+}
+.board-items { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.board-empty { padding: 8px 4px; font-size: 14px; color: var(--color-text-tertiary); }
+.board-card {
+  display: block;
+  padding: 12px 14px;
+  border: 1px solid var(--color-border-default);
+  border-radius: 12px;
+  background: var(--color-bg-surface);
+  color: inherit;
+  text-decoration: none;
+}
+.board-card:hover { border-color: var(--color-border-strong); }
+.board-card b { display: block; font-size: 15px; }
+.board-card span { display: block; margin-top: 2px; font-size: 13px; color: var(--color-text-tertiary); }
+
+/* Tablet (768–1099 px): tighter gutters; search moves to Explore; the For companies link drops out of the header. */
+@media (min-width: 768px) and (max-width: 1099px) {
+  :root { --gutter: 24px; }
+  .header-search,
+  .header-secondary { display: none; }
+  .header-row { gap: 12px 16px; }
+  .main-nav a { padding: 10px 12px; }
+  .page { padding-top: 32px; }
+  .page-title { font-size: 34px; line-height: 42px; }
+  .board { grid-auto-columns: minmax(200px, 1fr); }
+}
+
+@media (max-width: 767px) {
+  .demo-row { min-height: 44px; }
+  .demo-label { font-size: 12px; }
+  .demo-select { font-size: 16px; height: 36px; flex: 1 1 auto; }
+  .page { padding-top: 16px; padding-bottom: 40px; }
+  .page-title { font-size: 28px; line-height: 34px; }
+  .page-sub { font-size: 15px; line-height: 22px; }
+  .page-head-sub .page-head-text .eyebrow { display: none; }
+  .page-actions { width: 100%; }
+  .page-section { margin-top: 40px; }
+  .board {
+    grid-auto-columns: 78%;
+    margin-inline: calc(-1 * var(--gutter));
+    padding-inline: var(--gutter);
+    scroll-padding-inline: var(--gutter);
+  }
+}

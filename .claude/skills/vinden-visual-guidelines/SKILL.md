@@ -120,14 +120,19 @@ Always apply a text style. Never set size or weight by hand.
   - Shadow/Float for the tab bar, sticky bars and sheets.
   - Shadow/On image for controls over covers.
   - Most surfaces are flat, with a 1 px border instead.
-- **Grid:** one breakpoint at 768 px.
+- **Grid:** three layouts.
 
-  | | Desktop | Phone |
-  |---|---|---|
-  | Container | 1,200 px content (`--gutter: 32px`) | Full width |
-  | Gutter | 32 px | 18 px |
-  | Card grid | auto-fill, min 250 px; gaps 20 px columns, 28 px rows | Rails or one column |
-  | Text block | 760 px max | Full width |
+  | | Desktop (1,100 px and up) | Tablet (768–1,099 px) | Phone (below 768 px) |
+  |---|---|---|---|
+  | Container | 1,200 px content | Full width | Full width |
+  | Gutter (`--gutter`) | 32 px | 24 px | 18 px |
+  | Page title | Heading/H1 40 | 34 px | Heading/H2 28 |
+  | Card grid | auto-fill, min 250 px; gaps 20 px columns, 28 px rows | The same, giving 2 to 3 columns | Rails or one column |
+  | Side panels | Beside the main column | Wrap below when they don't fit | Below, or an action bar |
+  | Navigation | Top nav with search | Top nav; search on Explore | Top bar and tab bar |
+  | Text block | 760 px max | 760 px max | Full width |
+
+  Figma: Layout page, Grid and breakpoints. The Layout collection has `size/breakpoint-tablet` (768), `size/breakpoint-desktop` (1100) and `size/gutter-*`.
 
 - **Touch targets** are at least 44 × 44 px, with 8 px between neighbours.
 

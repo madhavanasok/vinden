@@ -1,7 +1,7 @@
 import { Link } from 'react-router';
 import { rupees, useJoinCommunity, useToggleSave, type Brief, type ClubTask, type Community, type WorkCard as WorkCardData } from '../api';
 import { Logo, Score } from './Bits';
-import { Cover, filesLabel, type CoverTone, type Format } from './Cover';
+import { Cover, filesLabel, spreadTones, type CoverTone, type Format } from './Cover';
 import { CheckBadge, Icon, type IconName } from './Icon';
 import { AvatarStack, ProgressBar } from './Rows';
 
@@ -22,6 +22,8 @@ export function SaveButton({ kind, slug, saved, label }: { kind: 'work' | 'brief
 }
 
 export function BriefCard({ brief }: { brief: Brief }) {
+  // Fee, team size and weeks are unknown for newly submitted problems (pricing is an open question).
+  const teamLine = [brief.teamSize && `Team of ${brief.teamSize}`, brief.weeks && `${brief.weeks} weeks`].filter(Boolean).join(' · ');
   return (
     <article className="card-item">
       <div className="card-body">
@@ -33,13 +35,15 @@ export function BriefCard({ brief }: { brief: Brief }) {
         </Cover>
         <h3 className="card-title">{brief.title}</h3>
         <p className="card-meta">{brief.company.name} · {brief.company.sector}</p>
-        <p className="card-meta">Team of {brief.teamSize} · {brief.weeks} weeks</p>
+        {teamLine && <p className="card-meta">{teamLine}</p>}
       </div>
       <div className="card-foot">
-        <span className="fee">
-          <b>{rupees(brief.fee)}</b>
-          <span>to your club</span>
-        </span>
+        {brief.fee !== null && (
+          <span className="fee">
+            <b>{rupees(brief.fee)}</b>
+            <span>to your club</span>
+          </span>
+        )}
         <button type="button" className="btn btn-accent btn-sm">View brief</button>
       </div>
       <SaveButton kind="brief" slug={brief.slug} saved={brief.saved} label={brief.title} />
@@ -74,12 +78,12 @@ export function TaskCard({ task }: { task: ClubTask }) {
   );
 }
 
-/** A card for work that hasn't been posted yet: no link, no save, no score. Its generated cover is what will be posted. */
-export function WorkCardPreview({ title, format, files, tone, byline }: { title: string; format: Format; files: number; tone: CoverTone; byline: string }) {
+/** A card for work that hasn't been posted yet: no link, no score. Without images, its generated cover is what will be posted. */
+export function WorkCardPreview({ title, format, files, tone, byline, image }: { title: string; format: Format; files: number; tone: CoverTone; byline: string; image?: string | null }) {
   return (
     <article className="card-item card-preview" aria-label="Preview of your card">
       <div className="card-body">
-        <Cover title={title} kind={format} meta={files ? filesLabel(files) : undefined} tone={tone} />
+        <Cover image={image} title={title} kind={format} meta={files ? filesLabel(files) : undefined} tone={tone} />
         <h3 className="card-title">{title}</h3>
         <p className="small muted">New · no vouches yet</p>
         <p className="card-meta">{byline}</p>
@@ -88,24 +92,44 @@ export function WorkCardPreview({ title, format, files, tone, byline }: { title:
   );
 }
 
-/** `owner` cards sit on someone's profile, so they describe the kind of work rather than who made it. */
-export function WorkCard({ work, owner = false }: { work: WorkCardData; owner?: boolean }) {
+/**
+ * Verified work. The card body opens the work; the maker's name opens their profile (register FN-07-I02).
+ * `owner` cards sit on someone's profile, so they describe the kind of work rather than who made it.
+ * Open question R-25: saving, shortlisting and contacting aren't in the sources, so work cards have no Save.
+ */
+export function WorkCard({ work, owner = false, tone }: { work: WorkCardData; owner?: boolean; tone?: CoverTone }) {
+  const maker = !owner && work.maker && work.byline.startsWith(work.maker.name) ? work.maker : null;
   return (
     <article className={`card-item${owner ? ' card-item-compact' : ''}`}>
       <Link to={`/work/${work.slug}`} className="card-body">
-        <Cover variant={work.cover} title={work.title} kind={work.format ?? undefined} meta={filesLabel(work.files)} tone={work.coverTone} seed={work.slug} />
+        <Cover variant={work.cover} image={work.image} title={work.title} kind={work.format ?? undefined} meta={filesLabel(work.files)} tone={tone ?? work.coverTone} seed={work.slug} />
         <h3 className="card-title">{work.title}</h3>
         <Score score={work.score} count={work.vouchCount} size={owner ? 'sm' : undefined} />
-        <p className="card-meta">{owner ? work.kindLine : work.byline}</p>
-        {!owner && checksLine(work.checks) && (
-          <p className="checks">
-            <CheckBadge />
-            {checksLine(work.checks)}
-          </p>
-        )}
+        {!maker && <p className="card-meta">{owner ? work.kindLine : work.byline}</p>}
       </Link>
-      {!owner && <SaveButton kind="work" slug={work.slug} saved={work.saved} label={work.title} />}
+      {maker && (
+        <p className="card-meta card-maker">
+          <Link to={`/people/${maker.handle}`}>{maker.name}</Link>
+          {work.byline.slice(maker.name.length)}
+        </p>
+      )}
+      {!owner && checksLine(work.checks) && (
+        <p className="checks">
+          <CheckBadge />
+          {checksLine(work.checks)}
+        </p>
+      )}
     </article>
+  );
+}
+
+/** A grid of work cards whose generated covers never repeat the tone of the card before them. */
+export function WorkGrid({ works, className = 'rail rail-wrap', label }: { works: WorkCardData[]; className?: string; label?: string }) {
+  const tones = spreadTones(works);
+  return (
+    <ul className={`work-grid ${className}`} aria-label={label}>
+      {works.map((w) => <li key={w.slug}><WorkCard work={w} tone={tones.get(w.slug)} /></li>)}
+    </ul>
   );
 }
 

@@ -25,6 +25,14 @@ File Vinden-Design (`zFjDhV7CDaLDVZpqN3dBzU`).
 - **Trust** (blue): verified by Vinden or a manager. **Club** (lavender): club or private. **Neutral**: low weight or plain info. **Highlight** (gold): a milestone. **Success** (green): a completed system step.
 - Text is always the 700 step on its tint, which passes AA. An icon is optional.
 
+- **Status pills (feature register build):**
+  - **Work status:** Verified uses Trust; In review and Posted use Neutral with a clock; Changes asked uses Club; "Not yet" is a dashed, unfilled pill. Code: `StatusPill` in components/Status.tsx.
+  - **Role verification:**
+    - Manager confirmed: Trust with a check.
+    - Offer letter verified · private: Club with a lock. The letter itself is never shown.
+    - Waiting for confirmation: Neutral with a clock.
+    - Code: `RoleStatus` in features/onboarding/RoleStatus.tsx.
+
 ## In code
 
 Paths are under `apps/web/src`.

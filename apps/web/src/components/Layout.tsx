@@ -1,38 +1,54 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
-import { Link, NavLink, Outlet, useLocation, useNavigate, useSearchParams } from 'react-router';
-import { useMe } from '../api';
+import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router';
+import { getPersona, useMe, usePersonas, useSwitchPersona, type Me } from '../api';
 import { Avatar, Logo } from './Bits';
 import { Icon, type IconName } from './Icon';
 
-const CATEGORIES = [
-  { label: 'For you', params: '' },
-  { label: 'Business', params: 'category=Business' },
-  { label: 'Design', params: 'category=Design' },
-  { label: 'Data', params: 'category=Data' },
-  { label: 'Research', params: 'category=Research' },
-  { label: 'Problem statements', params: 'view=briefs' },
-];
-
-/** Explore covers Home plus anything opened from it: work, and other people's profiles. */
+/** Explore covers Home, the work repository and anything opened from them: work, and other people's profiles. */
 function useExploreActive() {
   const { pathname } = useLocation();
   const me = useMe();
-  return pathname === '/' || pathname.startsWith('/work/') || (pathname.startsWith('/people/') && pathname !== `/people/${me.data?.handle}`);
+  return pathname === '/' || pathname === '/explore' || pathname.startsWith('/work/') || (pathname.startsWith('/people/') && pathname !== `/people/${me.data?.handle}`);
 }
+
+/** Flows that bring their own phone Action bar, so the tab bar steps aside. */
+const OWN_ACTION_BAR = [/^\/post$/, /^\/signup$/, /^\/profile\//, /^\/problems\/new$/, /^\/companies\/register$/, /^\/clubs\/[^/]+\/apply$/, /^\/communities\/new$/];
 
 export function Layout() {
   const { pathname } = useLocation();
   return (
     <>
       <a href="#main" className="skip-link">Skip to content</a>
-      <Header showSearch={pathname !== '/'} />
+      <DemoBar />
+      <Header showSearch={pathname !== '/' && pathname !== '/explore'} />
       <main id="main" className="app-main">
         <Outlet />
       </main>
       <Footer />
-      {/* Flows like Post work bring their own Action bar on phones, so the tab bar steps aside. */}
-      {pathname !== '/post' && <TabBar />}
+      {!OWN_ACTION_BAR.some((r) => r.test(pathname)) && <TabBar />}
     </>
+  );
+}
+
+/**
+ * Demo only, not part of the product: switch who the demo acts as, so every role's screens and flows can be tried.
+ * Visible at every size, above everything else, and styled apart from the product UI.
+ */
+function DemoBar() {
+  const personas = usePersonas();
+  const switchTo = useSwitchPersona();
+  const current = getPersona();
+  return (
+    <div className="demo-bar">
+      <div className="container demo-row">
+        <label htmlFor="demo-persona" className="demo-label"><span className="demo-tag">Demo</span>Viewing as</label>
+        <select id="demo-persona" className="demo-select" value={current} onChange={(e) => switchTo(e.target.value)}>
+          {(personas.data ?? [{ as: current, name: current, label: '' }]).map((p) => (
+            <option key={p.as} value={p.as}>{p.name}{p.label ? ` · ${p.label}` : ''}</option>
+          ))}
+        </select>
+      </div>
+    </div>
   );
 }
 
@@ -94,7 +110,7 @@ function HeaderSearch() {
   const [q, setQ] = useState('');
   const submit = (e: FormEvent) => {
     e.preventDefault();
-    navigate(q.trim() ? `/?q=${encodeURIComponent(q.trim())}` : '/');
+    navigate(q.trim() ? `/explore?q=${encodeURIComponent(q.trim())}` : '/explore');
   };
   return (
     <form role="search" className="search header-search" onSubmit={submit}>
@@ -104,12 +120,38 @@ function HeaderSearch() {
   );
 }
 
+/** The top nav's links for each kind of account. Navigation itself isn't decided yet; this follows the register's areas. */
+function navFor(me: Me | undefined, explore: boolean, pathname: string) {
+  const links: { to: string; label: string; active?: boolean }[] = [{ to: '/', label: 'Explore', active: explore }];
+  if (me?.account === 'company') {
+    links.push({ to: '/problems', label: 'Problem statements' });
+    return links;
+  }
+  links.push({ to: '/communities', label: 'Communities' });
+  if (me?.club) links.push({ to: '/club', label: 'Club', active: pathname === '/club' || pathname.startsWith('/club/') || pathname.startsWith('/clubs/') });
+  return links;
+}
+
+function ProfileLink({ me }: { me: Me }) {
+  if (me.account === 'company' && me.company) {
+    return (
+      <Link to="/problems" className="avatar-link" aria-label={`${me.company.name} account`}>
+        <span className="company-square" style={{ background: me.company.color }} aria-hidden="true">{me.company.initial}</span>
+      </Link>
+    );
+  }
+  return (
+    <Link to={`/people/${me.handle}`} className="avatar-link" aria-label="Your profile">
+      <Avatar person={me} size={44} decorative />
+    </Link>
+  );
+}
+
 function Header({ showSearch }: { showSearch: boolean }) {
   const me = useMe();
   const { pathname } = useLocation();
-  const [params] = useSearchParams();
   const explore = useExploreActive();
-  const current = pathname === '/' ? params.toString().replace(/(^|&)q=[^&]*/, '').replace(/^&/, '') : null;
+  const visitor = me.data?.account === 'visitor';
 
   return (
     <header className="site-header">
@@ -117,40 +159,40 @@ function Header({ showSearch }: { showSearch: boolean }) {
         <Brand />
         {showSearch && <HeaderSearch />}
         <nav className="main-nav" aria-label="Main">
-          <Link to="/" className={explore ? 'active' : undefined} aria-current={explore ? 'page' : undefined}>Explore</Link>
-          <NavLink to="/club">Club</NavLink>
-          <NavLink to="/openings">Openings</NavLink>
-          <NavLink to="/saved">Saved</NavLink>
+          {navFor(me.data, explore, pathname).map((l) =>
+            l.active === undefined ? (
+              <NavLink key={l.to} to={l.to}>{l.label}</NavLink>
+            ) : (
+              <Link key={l.to} to={l.to} className={l.active ? 'active' : undefined} aria-current={l.active ? 'page' : undefined}>{l.label}</Link>
+            ),
+          )}
         </nav>
         <div className="header-actions">
-          <Link to="/post" className="btn btn-primary">
-            <Icon name="plus" size={18} strokeWidth={2} />
-            Post work
-          </Link>
-          <ThemeSwitch />
-          <button type="button" className="icon-btn" aria-label="Notifications, 2 new">
-            <Icon name="bell" size={22} />
-            <span className="notify-dot" />
-          </button>
-          {me.data && (
-            <Link to={`/people/${me.data.handle}`} className="avatar-link" aria-label="Your profile">
-              <Avatar person={me.data} size={44} decorative />
-            </Link>
+          {visitor ? (
+            <>
+              <ThemeSwitch />
+              <Link to="/companies/register" className="btn btn-outline header-secondary">For companies</Link>
+              <Link to="/signup" className="btn btn-primary">Sign up</Link>
+            </>
+          ) : (
+            <>
+              {me.data?.account === 'company' ? (
+                <Link to="/problems/new" className="btn btn-primary">
+                  <Icon name="plus" size={18} strokeWidth={2} />
+                  Submit a problem
+                </Link>
+              ) : (
+                <Link to="/post" className="btn btn-primary">
+                  <Icon name="plus" size={18} strokeWidth={2} />
+                  Post work
+                </Link>
+              )}
+              <ThemeSwitch />
+              {me.data && <ProfileLink me={me.data} />}
+            </>
           )}
         </div>
       </div>
-      <nav className="cat-nav" aria-label="Categories">
-        <div className="container cat-row">
-          {CATEGORIES.map((c) => {
-            const active = current === c.params;
-            return (
-              <Link key={c.label} to={c.params ? `/?${c.params}` : '/'} className={active ? 'active' : undefined} aria-current={active ? 'page' : undefined}>
-                {c.label}
-              </Link>
-            );
-          })}
-        </div>
-      </nav>
     </header>
   );
 }
@@ -163,15 +205,7 @@ export function MobileBar() {
       <Brand size={36} />
       <div className="header-actions">
         <ThemeSwitch />
-        <button type="button" className="icon-btn" aria-label="Notifications, 2 new">
-          <Icon name="bell" size={22} />
-          <span className="notify-dot" />
-        </button>
-        {me.data && (
-          <Link to={`/people/${me.data.handle}`} className="avatar-link" aria-label="Your profile">
-            <Avatar person={me.data} size={44} decorative />
-          </Link>
-        )}
+        {me.data && (me.data.account === 'visitor' ? <Link to="/signup" className="btn btn-primary btn-sm">Sign up</Link> : <ProfileLink me={me.data} />)}
       </div>
     </div>
   );
@@ -197,14 +231,19 @@ function TabBar() {
   const me = useMe();
   const { pathname } = useLocation();
   const explore = useExploreActive();
-  const profile = `/people/${me.data?.handle ?? 'ishaan'}`;
-  const tabs: { to: string; label: string; icon: IconName; active: boolean }[] = [
-    { to: '/', label: 'Explore', icon: 'compass', active: explore },
-    { to: '/club', label: 'Club', icon: 'users', active: pathname === '/club' },
-    { to: '/post', label: 'Post', icon: 'plusSquare', active: pathname === '/post' },
-    { to: '/openings', label: 'Openings', icon: 'briefcase', active: pathname === '/openings' },
-    { to: profile, label: 'Profile', icon: 'user', active: pathname === profile },
-  ];
+  const m = me.data;
+  const tab = (to: string, label: string, icon: IconName, active = pathname === to) => ({ to, label, icon, active });
+  const tabs = !m || m.account === 'visitor'
+    ? [tab('/', 'Explore', 'compass', explore), tab('/communities', 'Communities', 'users', pathname.startsWith('/communities')), tab('/signup', 'Sign up', 'user')]
+    : m.account === 'company'
+      ? [tab('/', 'Explore', 'compass', explore), tab('/problems', 'Problems', 'briefcase'), tab('/problems/new', 'Submit', 'plusSquare')]
+      : [
+          tab('/', 'Explore', 'compass', explore),
+          tab('/communities', 'Communities', 'users', pathname.startsWith('/communities')),
+          tab('/post', 'Post', 'plusSquare'),
+          ...(m.club ? [tab('/club', 'Club', 'graduation', pathname === '/club' || pathname.startsWith('/club/') || pathname.startsWith('/clubs/'))] : []),
+          tab(`/people/${m.handle}`, 'Profile', 'user'),
+        ];
   return (
     <nav className="tabbar" aria-label="Main">
       {tabs.map((t) => (
@@ -227,11 +266,9 @@ function Footer() {
           <span className="soft">Proof of Work is the new résumé.</span>
         </div>
         <nav aria-label="Footer" className="footer-links">
-          <a href="#">About</a>
-          <a href="#">Vinden Club</a>
-          <a href="#">For companies</a>
-          <a href="#">Privacy</a>
-          <a href="#">Terms</a>
+          <Link to="/explore">Explore work</Link>
+          <Link to="/communities">Communities</Link>
+          <Link to="/companies/register">For companies</Link>
         </nav>
         <span className="muted small">© 2026 Vinden</span>
       </div>

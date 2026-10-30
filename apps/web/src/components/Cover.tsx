@@ -2,9 +2,9 @@ import type { CSSProperties, ReactNode } from 'react';
 import { Icon, type IconName } from './Icon';
 
 /*
- * Card and hero art. There's no photography of student work yet, so each cover is a small
- * drawing of the work itself — a chart, a funnel, a deck — in one of the cover tones.
- * Work posted without a preview image gets a generated cover: its format, file count and title.
+ * Card and hero art. Work posted with images shows its first image. Seeded demo work has a small drawing of the work
+ * itself (a chart, a funnel, a deck) in one of the cover tones. Work without images gets a generated cover: its format,
+ * file count and title (register FN-04-I02).
  */
 
 export const COVER_TONES = ['blue', 'teal', 'mint', 'gold', 'peach', 'rose', 'lavender', 'stone'] as const;
@@ -41,15 +41,20 @@ const FORMAT_FOR_EXT: Record<string, Format> = {
   fig: 'Design', sketch: 'Design', xd: 'Design', png: 'Design', jpg: 'Design', jpeg: 'Design',
   ipynb: 'Code', py: 'Code', js: 'Code', ts: 'Code', zip: 'Code',
 };
-const FORMAT_FOR_CATEGORY: Record<string, Format> = { Business: 'Report', Design: 'Design', Data: 'Dataset', Research: 'Research' };
+const FORMAT_FOR_AREA: Record<string, Format> = {
+  'Business problems': 'Report', 'Market research': 'Research', 'Product analysis': 'Report', 'Case studies': 'Document',
+  'Data analysis': 'Dataset', Design: 'Design', Technical: 'Code', Entrepreneurship: 'Deck', Research: 'Research',
+  // The older categories.
+  Business: 'Report', Data: 'Dataset',
+};
 
 /** What a new post's generated cover calls it: the first file's type, else the area of work. */
-export function formatFor(fileNames: string[], category: string | null): Format {
+export function formatFor(fileNames: string[], area: string | null): Format {
   for (const name of fileNames) {
     const found = FORMAT_FOR_EXT[name.split('.').pop()?.toLowerCase() ?? ''];
     if (found) return found;
   }
-  return FORMAT_FOR_CATEGORY[category ?? ''] ?? 'Report';
+  return FORMAT_FOR_AREA[area ?? ''] ?? 'Report';
 }
 
 export const filesLabel = (n: number) => `${n} ${n === 1 ? 'file' : 'files'}`;
@@ -275,9 +280,40 @@ const ART: Record<string, { tone: Tone; art: ReactNode }> = {
   },
 };
 
+/** The tone a card's cover shows: a drawing's own tone, else the fixed tone, else one picked from the slug. Null for images. */
+export function coverToneOf(c: { image?: string | null; cover?: string; coverTone?: CoverTone | null; slug: string }): CoverTone | null {
+  if (c.image) return null;
+  const drawn = c.cover ? ART[c.cover] : undefined;
+  if (drawn) return drawn.tone === 'navy' ? null : drawn.tone;
+  return c.coverTone ?? toneFor(c.slug);
+}
+
+/**
+ * Tones for a row or grid of cards, so a generated cover never repeats the card before it (register FN-04-I02).
+ * Drawn covers, images and tones the poster saw in the preview stay as they are; only picked tones move along.
+ */
+export function spreadTones<T extends { slug: string; image?: string | null; cover?: string; coverTone?: CoverTone | null }>(cards: T[]) {
+  const tones = new Map<string, CoverTone>();
+  let previous: CoverTone | null = null;
+  for (const c of cards) {
+    let t = coverToneOf(c);
+    const movable = !c.image && !(c.cover && ART[c.cover]) && !c.coverTone;
+    if (t && movable && t === previous) t = COVER_TONES[(COVER_TONES.indexOf(t) + 1) % COVER_TONES.length];
+    if (t && movable) tones.set(c.slug, t);
+    previous = t;
+  }
+  return tones;
+}
+
 interface CoverProps {
   /** A drawing from ART. Empty or unknown means the work has no preview, so the cover is generated. */
   variant?: string;
+  /** An image of the work (a URL). Shown instead of a drawing or a generated cover. */
+  image?: string | null;
+  /** Alt text for `image`; leave empty when the title is right next to it. */
+  alt?: string;
+  /** 'contain' shows the whole image (the work page); cards crop to fill. */
+  fit?: 'cover' | 'contain';
   className?: string;
   children?: ReactNode;
   /** Generated covers only: the work's title, format and a short note such as "2 files". */
@@ -291,10 +327,18 @@ interface CoverProps {
   large?: boolean;
 }
 
-export function Cover({ variant, className, children, title = '', kind = 'Report', meta, tone: fixed, seed, large = false }: CoverProps) {
+export function Cover({ variant, image, alt = '', fit = 'cover', className, children, title = '', kind = 'Report', meta, tone: fixed, seed, large = false }: CoverProps) {
   const drawn = variant ? ART[variant] : undefined;
   const t: Tone = drawn?.tone ?? fixed ?? toneFor(seed ?? title);
-  const classes = ['cover', !drawn && 'cover-gen', large && 'cover-lg', className].filter(Boolean).join(' ');
+  const classes = ['cover', !drawn && !image && 'cover-gen', large && 'cover-lg', className].filter(Boolean).join(' ');
+  if (image) {
+    return (
+      <div className={classes} style={{ background: fit === 'contain' ? 'var(--color-bg-surface)' : tone('stone', 'bg') }}>
+        <img src={image} alt={alt} loading="lazy" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: fit }} />
+        {children}
+      </div>
+    );
+  }
   return (
     <div className={classes} style={{ background: tone(t, 'bg') }}>
       <div className="cover-art" aria-hidden="true">

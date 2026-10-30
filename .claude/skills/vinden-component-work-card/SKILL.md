@@ -23,7 +23,7 @@ File Vinden-Design (`zFjDhV7CDaLDVZpqN3dBzU`).
 
 - Order: cover, title (two lines max), vouch score, who made it, then the checks passed ("AI checked · Club verified").
 - Never hide the checks line to save space.
-- The whole card links to the work. Save is a separate Floating icon button.
+- The whole card links to the work, and the maker's name links to their profile. There's no Save on cards: saving isn't in the sources (R-25).
 - On a profile, the byline becomes the kind of work.
 - Work without a preview image gets a Generated cover (kind, file type and title on a tone from the work); see vinden-component-cover. Neighbouring cards never share a tone, and never Navy. In Figma the default cover is Blue; override the tone per card.
 
@@ -31,10 +31,11 @@ File Vinden-Design (`zFjDhV7CDaLDVZpqN3dBzU`).
 
 Paths are under `apps/web/src`.
 
-- `<WorkCard work owner? />` and `<WorkCardPreview title cover byline />` (no link, save or score) from components/Cards.tsx.
+- `<WorkCard work owner? tone? />` and `<WorkCardPreview title cover byline />` (no link or score) from components/Cards.tsx.
+- `<WorkGrid works />` lays out cards so that a generated cover never repeats the tone of the card before it (`spreadTones` in Cover.tsx).
 
 ## Accessibility
 
-- One link per card (the card body); Save is its own button with `aria-pressed`.
+- One link per card (the card body), plus the maker's profile link.
 
 Related skills: vinden-atom-vouch-score, vinden-component-cover, vinden-visual-guidelines.

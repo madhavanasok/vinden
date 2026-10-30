@@ -1,4 +1,4 @@
-import { one } from './db.js';
+import { one, rows } from './db.js';
 import { weightSumFor } from './score.js';
 
 /** The demo is signed in as this user. */
@@ -350,4 +350,239 @@ export async function seedCommunities() {
       await one("INSERT INTO community_members (community_id, user_id, status) SELECT $1, id, 'joined' FROM users WHERE handle = $2", [id, ME]);
     }
   }
+}
+
+/* ---------- The feature register build (vinden-design) ---------- */
+
+const PROFILES: [handle: string, describes: string, college: string | null, year: string | null, skills: string[], interests: string[]][] = [
+  ['ishaan', 'student', 'Meridian College', 'Second year', ['Market sizing', 'Excel', 'Survey design'], ['Growth', 'Research']],
+  ['ananya', 'student', 'Meridian College', 'Final year', ['Survey design', 'SQL', 'Funnel analysis'], ['Growth', 'Research']],
+  ['kabir', 'student', 'Meridian College', 'Third year', ['UX research', 'Prototyping', 'Figma'], ['Design', 'AI']],
+  ['meera', 'student', 'Meridian College', 'Final year', ['Python', 'Forecasting'], ['Data']],
+  ['rohan', 'student', 'Meridian College', 'Second year', ['Deck design', 'Pitching'], ['Design', 'Business']],
+  ['rahul', 'student', 'Meridian College', 'Final year', ['Research', 'Outreach'], ['Business']],
+  ['priya', 'professional', null, null, ['Growth', 'Analytics', 'SQL'], ['Product and growth']],
+];
+
+const NEW_PEOPLE: { handle: string; name: string; initials: string; tone: Tone; headline: string; describes?: string; year?: string; weight: number }[] = [
+  { handle: 'tara', name: 'Tara Joshi', initials: 'TJ', tone: 'lav', headline: 'New to Vinden', weight: 1.5 },
+  { handle: 'zoya', name: 'Zoya Khan', initials: 'ZK', tone: 'gold', headline: 'B.Sc student, Meridian College', describes: 'student', year: 'First year', weight: 1.8 },
+  { handle: 'dev', name: 'Dev Kulkarni', initials: 'DK', tone: 'orange', headline: 'B.Com student, Meridian College', describes: 'student', year: 'Second year', weight: 2.1 },
+  { handle: 'sana', name: 'Sana Qureshi', initials: 'SQ', tone: 'blue', headline: 'BBA student, Meridian College', describes: 'student', year: 'Second year', weight: 2.4 },
+  { handle: 'neel', name: 'Neel Patil', initials: 'NP', tone: 'lav', headline: 'B.Tech student, Meridian College', describes: 'student', year: 'Third year', weight: 2.6 },
+];
+
+const MOTIVATION_Q = 'Why do you want to join the Vinden Club?';
+
+const APPLICANTS: [handle: string, step: string, answer: string, evaluation: Record<string, string>][] = [
+  ['zoya', 'motivation', 'I want to work on real problems, not just assignments, and learn how to show what I can do.', {}],
+  ['dev', 'screening', 'I run the commerce society’s newsletter and want to learn research properly, with people who push me.', {}],
+  ['sana', 'interview', 'I like figuring out why people do what they do. I want to turn that into work companies can use.', {
+    'Motivation and ambition': 'Clear reasons; wants paid projects', 'Communication': 'Concise and confident',
+  }],
+  ['neel', 'task', 'I build small tools for my hostel and want to learn how to take them further.', {
+    'Motivation and ambition': 'Strong', 'Problem-solving ability': 'Broke the brief down well', 'Ability to work in a team': 'Good, from the group round',
+  }],
+];
+
+const TRAINING: { kind: 'project' | 'task' | 'session' | 'path'; title: string; body: string; skill?: string; when?: string; resources?: { type: string; title: string }[] }[] = [
+  { kind: 'project', title: 'Size the campus food-delivery market in Pune', skill: 'Market research', body: 'Estimate how many students order food online each week, and what they spend. Show your method.' },
+  { kind: 'project', title: 'Redesign the canteen pre-order flow', skill: 'Product design', body: 'Interview ten students who skip the canteen at lunch, then prototype a pre-order flow that saves them the queue.' },
+  { kind: 'task', title: 'Analyse a company: a food-delivery app’s student plan', skill: 'Business analysis', body: 'Pick one food-delivery app. Explain who its student plan is for, how it makes money and one change you would test.' },
+  { kind: 'task', title: 'Build a prototype: library seat check-in', skill: 'Prototyping', body: 'Prototype a check-in that releases seats nobody turned up for.' },
+  { kind: 'task', title: 'Prepare a pitch: a campus laundry service', skill: 'Pitching', body: 'A five-slide pitch and simple unit economics for a student-run laundry pickup.' },
+  { kind: 'session', title: 'Alumni session: Landing your first growth role', when: 'Thu 30 Oct, 6 pm', body: 'Career journeys and the skills that matter, with Priya Nair, Growth Lead at Northwind Labs.' },
+  { kind: 'session', title: 'Industry session: a real marketing problem from Brewbox', when: 'Tue 4 Nov, 5 pm', body: 'Brewbox brings a live marketing problem and guides members through solving it.' },
+  {
+    kind: 'path', title: 'Market research', skill: 'Market research', body: 'A short, curated path for sizing markets and running surveys.',
+    resources: [
+      { type: 'Course', title: 'Market sizing basics' }, { type: 'Article', title: 'Top-down and bottom-up estimates' },
+      { type: 'Case study', title: 'How a campus app sized its first city' }, { type: 'Industry report', title: 'Food delivery in India, 2026' },
+      { type: 'Template', title: 'Market-sizing worksheet' },
+    ],
+  },
+  {
+    kind: 'path', title: 'Data analysis', skill: 'Data analysis', body: 'From messy spreadsheets to a clear chart.',
+    resources: [
+      { type: 'Course', title: 'Spreadsheet analysis for beginners' }, { type: 'Video', title: 'Cleaning messy survey data' },
+      { type: 'Book', title: 'Storytelling with Data' }, { type: 'Tool', title: 'Pivot tables in Google Sheets' },
+    ],
+  },
+];
+
+/** Club work waiting for the Proof of Work & Quality team. 'changes' means a reviewer sent feedback. */
+const IN_REVIEW: { slug: string; title: string; members: [string, string, number][]; item: number; status: string; feedback?: string; format: string; summary: string }[] = [
+  {
+    slug: 'food-app-student-plan', title: 'A food-delivery app’s student plan, analysed', members: [['rohan', 'Analysis and write-up', 100]], item: 3,
+    status: 'in_review', format: 'Report', summary: 'Who the student plan is for, how it makes money, and one pricing change worth testing.',
+  },
+  {
+    slug: 'pune-delivery-market', title: 'Campus food-delivery market in Pune', members: [['ishaan', 'Survey and estimate', 60], ['rohan', 'Charts and write-up', 40]], item: 1,
+    status: 'in_review', format: 'Dataset', summary: 'A bottom-up estimate of weekly student orders across six Pune campuses, from a survey of 140 students.',
+  },
+  {
+    slug: 'canteen-preorder', title: 'Canteen pre-order prototype', members: [['kabir', 'Interviews and prototype', 100]], item: 2,
+    status: 'changes', feedback: 'Add your interview notes so we can check the findings behind the flow.', format: 'Design',
+    summary: 'A pre-order flow for the canteen, tested with five students who usually skip lunch.',
+  },
+];
+
+const PROBLEMS: Record<string, { description: string; needs: string; stage: string; requirements?: string; followUp?: string; team?: string[]; by?: string }> = {
+  'pebble-kyc': {
+    description: 'Half of the students who sign up stop at KYC. We want to know why, and what to change first.', needs: 'Research and recommendations',
+    stage: 'problem', requirements: 'Interview students who dropped at KYC; review the funnel data we share.', by: 'arjun',
+  },
+  'kiro-checkin': {
+    description: 'Students say they want a mental-health check-in, but few use the one we have.', needs: 'A built solution', stage: 'team',
+    requirements: 'A clickable prototype tested with students.', team: ['kabir', 'rohan'],
+  },
+  'northwind-laptops': {
+    description: 'We need to know how many students would buy a refurbished laptop, and at what price.', needs: 'A report', stage: 'solution',
+    requirements: 'Market size for three campuses, with the method.', team: ['meera', 'ishaan'], followUp: 'Report delivered 27 Oct; Northwind reviewing.',
+  },
+  'brewbox-retention': {
+    description: 'Repeat orders fall after the third week. We want to understand why.', needs: 'Data analysis', stage: 'problem',
+  },
+};
+
+/** New demo data for the register's features. Runs once per database (marked in seed_marks). */
+export async function seedBuild() {
+  if (await one("SELECT 1 FROM seed_marks WHERE name = 'build-v1'")) return;
+  const club = await one<{ id: number }>("SELECT id FROM clubs WHERE slug = 'meridian'");
+  if (!club) return;
+  const id = async (handle: string) => (await one<{ id: number }>('SELECT id FROM users WHERE handle = $1', [handle]))?.id;
+
+  for (const [handle, describes, college, year, skills, interests] of PROFILES) {
+    await one('UPDATE users SET describes = $2, college = $3, study_year = $4, skills = $5, interests = $6, email = $7 WHERE handle = $1 AND describes IS NULL',
+      [handle, describes, college, year, skills, interests, `${handle}@example.com`]);
+  }
+  for (const p of NEW_PEOPLE) {
+    if (await id(p.handle)) continue;
+    await one(
+      `INSERT INTO users (handle, name, initials, tone, headline, vouch_weight, email, describes, college, study_year)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+      [p.handle, p.name, p.initials, p.tone, p.headline, p.weight, `${p.handle}@example.com`, p.describes ?? null,
+        p.describes ? 'Meridian College' : null, p.year ?? null],
+    );
+  }
+  const pebble = await one<{ id: number }>("SELECT id FROM companies WHERE slug = 'pebble'");
+  if (!(await id('arjun'))) {
+    await one(
+      `INSERT INTO users (handle, name, initials, tone, headline, vouch_weight, email, account, company_id)
+       VALUES ('arjun', 'Arjun Mehta', 'AM', 'blue', 'Head of Growth, Pebble Pay', 5, 'arjun@pebblepay.example', 'company', $1)`,
+      [pebble?.id ?? null],
+    );
+  }
+
+  // A role waiting for its manager, so the confirmation link can be tried: /confirm/demo-brewbox-ishaan
+  await one(
+    `INSERT INTO experiences (user_id, role, company, initial, color, period, verification, position, status, manager_email, token)
+     VALUES ($1, 'Marketing Intern', 'Brewbox', 'B', '#A84B06', 'May – Jun 2026 · 2 months', 'manager', 0, 'pending', 'neha@brewbox.example', 'demo-brewbox-ishaan')`,
+    [await id('ishaan')],
+  );
+  await one(
+    `INSERT INTO experiences (user_id, role, company, initial, color, period, verification, position)
+     VALUES ($1, 'Growth Lead', 'Northwind Labs', 'N', '#1565D8', '2022 – now · 4 years', 'manager', 0)`,
+    [await id('priya')],
+  );
+
+  // Communities: platform ones are Vinden's; a closed one has an admin; the club's community is run by Community & Events.
+  await one("UPDATE communities SET platform = true, domain = 'Product and growth' WHERE slug = 'product-growth'");
+  await one("UPDATE communities SET platform = true, domain = 'Design' WHERE slug = 'design-circle'");
+  await one("UPDATE communities SET domain = 'AI', admin_id = $1 WHERE slug = 'ai-builders-pune'", [await id('priya')]);
+  await one("UPDATE communities SET domain = 'Vinden Club', admin_id = $1 WHERE slug = 'meridian'", [await id('rohan')]);
+  for (const handle of ['dev', 'zoya']) {
+    await one(
+      "INSERT INTO community_members (community_id, user_id, status) SELECT c.id, $1, 'requested' FROM communities c WHERE c.slug = 'ai-builders-pune' ON CONFLICT DO NOTHING",
+      [await id(handle)],
+    );
+  }
+  const posts: [community: string, kind: string, title: string, body: string, when: string | null, place: string | null, author: string | null][] = [
+    ['meridian', 'event', 'Alumni session: Landing your first growth role', 'With Priya Nair, Growth Lead at Northwind Labs.', 'Thu 30 Oct, 6 pm', 'Seminar Hall 2', 'rohan'],
+    ['meridian', 'update', 'Applications are open', 'Selection runs in five steps: motivation form, screening, interview, practical task and final selection. Open to the whole college. No fee.', null, null, 'rohan'],
+    ['meridian', 'update', 'Snackly project delivered', 'Our team delivered the campus customer-acquisition teardown to Snackly. It is now verified Proof of Work.', null, null, 'rohan'],
+    ['product-growth', 'update', 'Teardown thread: why campus referral programmes leak', 'Share one referral programme you have seen gamed, and how you would fix it.', null, null, null],
+    ['product-growth', 'event', 'Growth office hours', 'Bring a funnel you are stuck on.', 'Sat 1 Nov, 11 am', 'Online', null],
+    ['design-circle', 'update', 'Portfolio review this Friday', 'Post a draft case study by Thursday night to get feedback.', null, null, null],
+  ];
+  for (const [i, [slug, kind, title, body, when, place, author]] of posts.entries()) {
+    await one(
+      `INSERT INTO community_posts (community_id, kind, title, body, when_text, place, author_id, created_at)
+       SELECT c.id, $2, $3, $4, $5, $6, $7, now() - make_interval(days => $8) FROM communities c WHERE c.slug = $1`,
+      [slug, kind, title, body, when, place, author ? await id(author) : null, i],
+    );
+  }
+
+  // Club selection: applicants at each step.
+  await one('UPDATE clubs SET recruiting = true WHERE id = $1', [club.id]);
+  for (const [handle, step, answer, evaluation] of APPLICANTS) {
+    await one(
+      'INSERT INTO applications (club_id, user_id, step, answers, evaluation) VALUES ($1, $2, $3, $4, $5) ON CONFLICT DO NOTHING',
+      [club.id, await id(handle), step, JSON.stringify([{ q: MOTIVATION_Q, a: answer }]), JSON.stringify(evaluation)],
+    );
+  }
+
+  // The training program.
+  const itemIds: number[] = [];
+  for (const [position, t] of TRAINING.entries()) {
+    itemIds.push((await one<{ id: number }>(
+      `INSERT INTO training_items (club_id, kind, title, body, skill, when_text, resources, position)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id`,
+      [club.id, t.kind, t.title, t.body, t.skill ?? null, t.when ?? null, JSON.stringify(t.resources ?? []), position],
+    ))!.id);
+  }
+  await one("UPDATE works SET training_item_id = $1 WHERE slug = 'library-booking'", [itemIds[3]]);
+
+  // Club work waiting for review, and one sent back with feedback.
+  for (const w of IN_REVIEW) {
+    if (await one('SELECT 1 FROM works WHERE slug = $1', [w.slug])) continue;
+    const position = (await one<{ p: number }>('SELECT COALESCE(max(position), 0) + 1 AS p FROM works'))!.p;
+    const workId = (await one<{ id: number }>(
+      `INSERT INTO works (slug, title, card_title, kind, category, subcategory, tags, skills, month, weeks, summary, files, cover, format,
+         club_id, ai_checked, split_confirmed, position, status, submitted_at, training_item_id, feedback)
+       VALUES ($1, $2, $2, 'Club task', 'Business', 'Club task', '{}', '{}', 'Oct 2026', 1, $3, 2, '', $4, $5, '29 Oct', $6, $7, $8, now() - interval '1 day', $9, $10)
+       RETURNING id`,
+      [w.slug, w.title, [w.summary], w.format, club.id, w.members.length > 1, position, w.status, itemIds[w.item - 1], w.feedback ?? null],
+    ))!.id;
+    for (const [pos, [handle, role, share]] of w.members.entries()) {
+      await one('INSERT INTO work_members (work_id, user_id, role, share, position) VALUES ($1, $2, $3, $4, $5)', [workId, await id(handle), role, share, pos]);
+    }
+  }
+
+  // Problem statements at each stage of the cycle, plus the delivered Snackly one.
+  for (const [slug, p] of Object.entries(PROBLEMS)) {
+    await one(
+      `UPDATE briefs SET description = $2, needs = $3, stage = $4, club_id = $5, requirements = $6, follow_up = $7, submitted_by = $8 WHERE slug = $1`,
+      [slug, p.description, p.needs, p.stage, club.id, p.requirements ?? null, p.followUp ?? null, p.by ? await id(p.by) : null],
+    );
+    for (const handle of p.team ?? []) {
+      await one('INSERT INTO brief_team (brief_id, user_id) SELECT b.id, $2 FROM briefs b WHERE b.slug = $1 ON CONFLICT DO NOTHING', [slug, await id(handle)]);
+    }
+  }
+  const snackly = await one<{ id: number }>("SELECT id FROM companies WHERE slug = 'snackly'");
+  if (snackly && !(await one("SELECT 1 FROM briefs WHERE slug = 'snackly-cac'"))) {
+    const briefId = (await one<{ id: number }>(
+      `INSERT INTO briefs (slug, company_id, title, category, team_size, weeks, fee, cover, position, description, needs, stage, club_id, follow_up)
+       VALUES ('snackly-cac', $1, 'Why has our customer acquisition cost increased among college users?', 'Business', 4, 6, 40000, 'cac', 99,
+         'Our cost to acquire a college user doubled in nine months.', 'Research and recommendations', 'pow', $2, 'Delivered 14 Oct; Snackly shipped two of the three fixes.')
+       RETURNING id`,
+      [snackly.id, club.id],
+    ))!.id;
+    for (const handle of ['ananya', 'kabir', 'meera', 'rohan']) {
+      await one('INSERT INTO brief_team (brief_id, user_id) VALUES ($1, $2) ON CONFLICT DO NOTHING', [briefId, await id(handle)]);
+    }
+    await one("UPDATE works SET brief_id = $1 WHERE slug = 'cac-teardown'", [briefId]);
+  }
+
+  await one("INSERT INTO seed_marks (name) VALUES ('build-v1')");
+}
+
+/** Community admins follow the community they run. Runs on every start; joining twice is a no-op. */
+export async function seedAdminsJoined() {
+  const added = await rows<{ community_id: number }>(
+    `INSERT INTO community_members (community_id, user_id, status)
+     SELECT id, admin_id, 'joined' FROM communities WHERE admin_id IS NOT NULL
+     ON CONFLICT DO NOTHING RETURNING community_id`,
+  );
+  for (const a of added) await one('UPDATE communities SET members = members + 1 WHERE id = $1', [a.community_id]);
 }

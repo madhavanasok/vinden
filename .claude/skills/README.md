@@ -9,7 +9,7 @@ Claude Code loads these automatically when a task matches. People can read them 
 - `vinden-product`: Vinden: requirements, roles and UX flows
 - `vinden-visual-guidelines`: Vinden visual guidelines
 
-## Atoms (20)
+## Atoms (21)
 
 - `vinden-atom-avatar`
 - `vinden-atom-avatar-stack`
@@ -17,6 +17,7 @@ Claude Code loads these automatically when a task matches. People can read them 
 - `vinden-atom-button`
 - `vinden-atom-category-tab`
 - `vinden-atom-checkbox`
+- `vinden-atom-count`
 - `vinden-atom-chip`
 - `vinden-atom-icon`
 - `vinden-atom-icon-button`
@@ -32,19 +33,28 @@ Claude Code loads these automatically when a task matches. People can read them 
 - `vinden-atom-text-field`
 - `vinden-atom-vouch-score`
 
-## Components (19)
+## Components (28)
 
 - `vinden-component-action-bar`
+- `vinden-component-ai-result`
+- `vinden-component-board`
 - `vinden-component-brief-card`
 - `vinden-component-community-card`
 - `vinden-component-contribution-split`
 - `vinden-component-cover`
+- `vinden-component-empty-state`
+- `vinden-component-feedback-note`
 - `vinden-component-info-row`
 - `vinden-component-member-row`
 - `vinden-component-mobile-top-bar`
 - `vinden-component-option-card`
+- `vinden-component-page-header`
 - `vinden-component-person-row`
+- `vinden-component-resource-row`
 - `vinden-component-section-header`
+- `vinden-component-session-card`
+- `vinden-component-stage-tracker`
+- `vinden-component-step-panel`
 - `vinden-component-tab-bar`
 - `vinden-component-task-card`
 - `vinden-component-teammate-row`
